@@ -2,7 +2,9 @@
 .Rhistory
 .Rapp.history
 # Session Data files
-.RData
+*.RData
+# Development data
+
 # User-specific files
 .Ruserdata
 # Example code in package build process
@@ -27,4 +29,4 @@ vignettes/*.pdf
 # R Environment Variables
 .Renviron
 .Rproj.user
-.rds
+
