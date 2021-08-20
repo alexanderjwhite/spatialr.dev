@@ -10,6 +10,7 @@ spatial_clust(
   v_init,
   coords,
   lambda,
+  w = NULL,
   optimizer = "fct_amsgrad",
   epsilon = 1e-08,
   max_iter = 1000,
@@ -26,6 +27,8 @@ spatial_clust(
 \item{coords}{matrix or data frame; euclidean coordinates in separate columns}
 
 \item{lambda}{numeric; penalization parameter}
+
+\item{w}{matrix; distance matrix}
 
 \item{optimizer}{internal function; only fct_amsgrad for now}
 
