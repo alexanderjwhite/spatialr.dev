@@ -3,6 +3,8 @@
 .Rapp.history
 # Session Data files
 *.RData
+*.rds
+*.html
 # Development data
 
 # User-specific files

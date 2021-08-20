@@ -1,14 +1,18 @@
 rm(list=ls())
-load("spatialLIBD.spe.RData")
+library(dplyr)
+library(ggplot2)
+load("development/spatialLIBD.spe.RData")
 
-if(inherits(try(expr_counts[["counts"]][1:5000,1:5000],silent = TRUE),'try-error')){counts=expr_counts[["counts"]][1:5000,1:5000]}else{counts=expr_counts[["counts"]][1:5000,1:5000]}
+# if(inherits(try(expr_counts[["counts"]][1:5000,1:5000],silent = TRUE),'try-error')){counts=expr_counts[["counts"]][1:5000,1:5000]}else{counts=expr_counts[["counts"]][1:5000,1:5000]}
+if(inherits(try(expr_counts[["counts"]][1:100,1:100],silent = TRUE),'try-error')){counts=expr_counts[["counts"]][1:100,1:100]}else{counts=expr_counts[["counts"]][1:100,1:100]}
+x = counts
+x = t(counts)
+coords=coords[rownames(x),]
+w <- fct_dist_matrix(coords)
 
-X = counts
-X = t(counts)
-coords=coords
 
 library(sparsesvd)
-sp_svd = sparsesvd(log(X+0.5),rank=20)
+sp_svd = sparsesvd(log(X+1),rank=20)
 
 U0=sp_svd$u %*% diag(sqrt(sp_svd$d))
 V0=sp_svd$v %*% diag(sqrt(sp_svd$d))
@@ -21,21 +25,22 @@ V0=sp_svd$v %*% diag(sqrt(sp_svd$d))
 #source("RMSprop.R")
 #source("Adam2.R")
 #source("Adadelta.R")
-source("Adam.new.R")
-source("Nadam.new.R")
-source("AMSgrad.new.R")
-source("AdaMax.new.R")
-source("RMSprop.new.R")
-source("Adam2.new.R")
-source("Adadelta.new.R")
-source("GD.new.R")
+source("development/Adam.new.R")
+source("development/Nadam.new.R")
+source("development/AMSgrad.new.R")
+source("development/AdaMax.new.R")
+source("development/RMSprop.new.R")
+source("development/Adam2.new.R")
+source("development/Adadelta.new.R")
+source("development/GD.new.R")
 f=Adam
 f=RMSprop
 objs_list = vector("list",8)
 names(objs_list)=c("Adam","Nadam","AMSgrad","AdaMax","RMSprop","Adam2","Adadelta","GD")
 U_list=V_list = objs_list
 ccc=0
-for(f in c(Adam,Nadam,AMSgrad,AdaMax,RMSprop,Adam2,Adadelta,GD)){
+# for(f in c(Adam,Nadam,AMSgrad,AdaMax,RMSprop,Adam2,Adadelta,GD)){
+for(f in c(AMSgrad)){
 	ccc=ccc+1
 	print(names(objs_list)[ccc])
 	i = 0;
@@ -44,8 +49,8 @@ for(f in c(Adam,Nadam,AMSgrad,AdaMax,RMSprop,Adam2,Adadelta,GD)){
 	PP = U %*% t(V);
 	EE = exp(PP);
 	
-	epsilon=10^(-6)
-	max_iter=2000
+	epsilon=1e-4
+	max_iter=100
 	objs=vector("numeric",max_iter)
 	objs = rep(0,max_iter);
 	obj = -Inf;
@@ -97,10 +102,26 @@ for(f in c(Adam,Nadam,AMSgrad,AdaMax,RMSprop,Adam2,Adadelta,GD)){
 }
 
 save(objs_list,U_list,V_list, file="objs-U-V_list.RData")
+load("objs-U-V_list.RData")
 
 par(mfrow=c(2,5))
 for(jj in 1:length(objs_list)){
 	plot(objs_list[[jj]], main=names(objs_list)[jj])
 }
 
+plot_data <- tibble(method = "Adam", lik = objs_list$Adam, index = 1:100) %>% 
+  bind_rows(tibble(method = "Nadam", lik = objs_list$Nadam, index = 1:100)) %>% 
+  bind_rows(tibble(method = "AMSgrad", lik = objs_list$AMSgrad, index = 1:100)) %>% 
+  bind_rows(tibble(method = "AdaMax", lik = objs_list$AdaMax, index = 1:100)) %>% 
+  bind_rows(tibble(method = "RMSprop", lik = objs_list$RMSprop, index = 1:100)) %>% 
+  bind_rows(tibble(method = "Adam2", lik = objs_list$Adam2, index = 1:100)) %>% 
+  bind_rows(tibble(method = "Adadelta", lik = objs_list$Adadelta, index = 1:100)) %>% 
+  bind_rows(tibble(method = "GD", lik = objs_list$GD, index = 1:100))
 
+(plot_data %>% 
+  ggplot() +
+  geom_line(aes(x = index, y = lik, color = method))) %>% 
+  plotly::ggplotly()
+
+
+# USE A<S GRAD
