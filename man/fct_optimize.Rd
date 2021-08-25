@@ -10,20 +10,18 @@ fct_optimize(
   v,
   w,
   lambda,
-  optimizer = "fct_amsgrad",
-  epsilon = 1e-08,
-  max_iter = 1000,
-  verbose = TRUE
+  optimizer,
+  epsilon,
+  max_iter,
+  verbose,
+  fast,
+  cores
 )
 }
 \arguments{
-\item{x}{data matrix}
+\item{x}{matrix; data matrix}
 
-\item{u}{initial u matrix}
-
-\item{v}{initial v matrix}
-
-\item{w}{distance matrix}
+\item{w}{matrix; distance matrix}
 
 \item{lambda}{numeric; penalization parameter}
 
@@ -34,17 +32,14 @@ fct_optimize(
 \item{max_iter}{integer; maximum number of iterations}
 
 \item{verbose}{TRUE or FALSE; print to screen?}
+
+\item{fast}{TRUE or FALSE; use compiled c?}
+
+\item{cores}{integer; number of cores to use}
 }
 \value{
 list of results
 }
 \description{
 Internal Optimization Function
-}
-\examples{
-fct_optimize(x = matrix(rnorm(100), nrow = 10, ncol = 10), 
-u = matrix(rnorm(20), nrow = 10, ncol = 2), 
-v = matrix(rnorm(20), nrow = 10, ncol = 2), 
-w = matrix(rnorm(100), nrow = 10, ncol = 10), 
-lambda = 1, optimizer = "fct_amsgrad", epsilon = 1e-8, max_iter = 10, verbose = TRUE)
 }

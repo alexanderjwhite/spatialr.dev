@@ -14,7 +14,9 @@ spatial_clust(
   optimizer = "fct_amsgrad",
   epsilon = 1e-08,
   max_iter = 1000,
-  verbose = TRUE
+  verbose = TRUE,
+  fast = TRUE,
+  cores = 1
 )
 }
 \arguments{
@@ -37,17 +39,14 @@ spatial_clust(
 \item{max_iter}{integer; maximum number of iterations}
 
 \item{verbose}{TRUE or FALSE; print to screen?}
+
+\item{fast}{TRUE or FALSE; use compiled c?}
+
+\item{cores}{integer; number of cores to use}
 }
 \value{
 list including u, v and convergence information
 }
 \description{
 Main Spatial Clustering Method
-}
-\examples{
-spatial_clust(x = matrix(rnorm(100), nrow = 10, ncol = 10), 
-u_init = matrix(rnorm(20), nrow = 10, ncol = 2), 
-v_init = matrix(rnorm(20), nrow = 10, ncol = 2), 
-coords = matrix(rnorm(20), nrow = 10, ncol = 2), 
-lambda = 1, optimizer = "fct_amsgrad", epsilon = 1e-8, max_iter = 10, verbose = TRUE)
 }

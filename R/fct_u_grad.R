@@ -1,3 +1,15 @@
-fct_u_grad <- function(x, u, v, w, j, lambda){
+#' Internal U Gradient Function
+#'
+#' @inheritParams fct_optimize
+#' @param uv_exp matrix; stored matrix multiplication
+#' @param j matrix; matrix of 1s
+#' @param one matrix; matrix of 1s with same shape as u
+#'
+#' @return matrix; u gradient
+#' 
+#' @export
+#' 
+#' @examples
+fct_u_grad <- function(x, u, v, uv_exp, w, j, one, lambda, cores){
   (t(x)-exp(u%*%t(v)))%*%v-2*lambda*(sum(diag(j%*%t(w)%*%u))-t(w)%*%u - w%*%u)
 }
