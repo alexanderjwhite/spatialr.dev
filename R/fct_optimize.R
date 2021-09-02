@@ -12,7 +12,8 @@
 #' @examples 
 fct_optimize <- function(x, u, v, w, lambda, optimizer, epsilon, max_iter, verbose, fast, cores){
   
-  if(optimizer == "fct_amsgrad"){optimize <- fct_amsgrad}
+  # if(optimizer == "fct_amsgrad"){optimize <- fct_amsgrad}
+  optimize <- optimizer
   if(fast){
     f_u_grad <- grad_u
     f_v_grad <- grad_v

@@ -1,5 +1,4 @@
-#function [updates, state] = Adadelta(gradients, state)
-Adadelta<-function(gradients, state){
+fct_opt_adadelta<-function(gradients, state){
 #%ADADELTA optimization
 #%   Detailed explanation goes here
 

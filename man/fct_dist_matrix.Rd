@@ -4,10 +4,25 @@
 \alias{fct_dist_matrix}
 \title{Internal Distance Matrix Computation}
 \usage{
-fct_dist_matrix(coords, verbose = TRUE)
+fct_dist_matrix(
+  coords,
+  distance = "euclidean",
+  method = "dist",
+  k = NULL,
+  alpha = 1,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{coords}{matrix or data frame; euclidean coordinates in separate columns}
+
+\item{distance}{the distance measure to be used. This must be one of "euclidean", "maximum", "manhattan", "canberra", "binary" or "minkowski". Any unambiguous substring can be given.}
+
+\item{method}{string; "dist" by default uses \eqn{w_{ij} = \exp(-\alpha \times distance_{ij})} in the w computation. Other options include "knn_1" which uses k nearest neighbors and uses neighbors as 1 and non-neighbors as 0. "knn_2" uses \eqn{w_{ij} = \exp(-\alpha \times distance_{ij})} for neighbors and 0 for non-neighbors.}
+
+\item{k}{integer; if knn = TRUE, number of nearest neighbors to consider}
+
+\item{alpha}{numeric; parameter to adjust distance calculation}
 
 \item{verbose}{TRUE or FALSE; print to screen?}
 }
@@ -18,5 +33,5 @@ distance matrix
 Internal Distance Matrix Computation
 }
 \examples{
-fct_dist_matrix(matrix(rnorm(20), nrow = 10, ncol = 2), verbose = TRUE)
+fct_dist_matrix(matrix(rnorm(20), nrow = 10, ncol = 2))
 }

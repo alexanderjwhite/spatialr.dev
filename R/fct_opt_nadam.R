@@ -1,13 +1,16 @@
-#' Internal AMSGrad Function
+
+#' Internal Nadam Function
 #'
-#' @param gradients matrix; gradients
-#' @param state object; state information
+#' @inheritParams fct_opt_amsgrad
 #'
 #' @return updates
 #' @export
 #'
-#' @examples fct_amsgrad(matrix(rnorm(20), nrow = 10, ncol = 2), state = NULL)
-fct_amsgrad <- function(gradients, state){
+#' @examples fct_opt_nadam(matrix(rnorm(20), nrow = 10, ncol = 2), state = NULL)
+fct_opt_nadam <- function(gradients, state){
+  
+  #%NADAM Summary of this function goes here
+  #%   Detailed explanation goes here
   
   if(length(state)==0){
     
@@ -17,8 +20,8 @@ fct_amsgrad <- function(gradients, state){
     state$iteration = 1;
     state$m = 0*gradients;
     state$v = 0*gradients;
-    state$vhat = 0*gradients;
     state$alpha = 1e-2;
+    
   }
   
   #% update biased first moment estimate
@@ -27,11 +30,17 @@ fct_amsgrad <- function(gradients, state){
   #% update biased second raw moment estimate
   state$v = state$beta2 * state$v + (1 - state$beta2) * gradients^2;
   
-  #% non-decreasing
-  state$vhat = pmax(state$vhat, state$v);
+  #% compute bias-corrected first moment estimate
+  mhat = state$m / (1 - state$beta1^(state$iteration + 1));
+  
+  #% compute bias-corrected second raw moment estimate
+  vhat = state$v / (1 - state$beta2^state$iteration);
+  
+  #% nadam
+  mhat = state$beta1 * mhat + (((1 - state$beta1) * gradients) / (1 - state$beta1^state$iteration));
   
   #% update parameters
-  updates = state$alpha * state$m / (sqrt(state$vhat) + state$epsilon);
+  updates = (state$alpha * mhat) / (sqrt(vhat) + state$epsilon);
   
   #% update iteration number
   state$iteration = state$iteration + 1;
@@ -43,9 +52,8 @@ fct_amsgrad <- function(gradients, state){
   state$iteration = state$iteration;
   state$m = state$m;
   state$v = state$v;
-  state$vhat = state$vhat;
-  state$alpha = state$alpha ;
+  state$alpha = state$alpha;
   
   return(list(updates=updates, state=state))
-  
 }
+

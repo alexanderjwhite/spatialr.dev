@@ -21,11 +21,11 @@ fct_optimize(
 \arguments{
 \item{x}{matrix; data matrix}
 
-\item{w}{matrix; distance matrix}
+\item{w}{matrix; distance matrix. If null, computed on the fly.}
 
 \item{lambda}{numeric; penalization parameter}
 
-\item{optimizer}{internal function; only fct_amsgrad for now}
+\item{optimizer}{internal optimization function; options include: fct_opt_amsgrad, fct_opt_adadelt, fct_opt_adam, fct_opt_adamax, fct_opt_grad_desc, fct_opt_nadam, fct_opt_rmsprop.}
 
 \item{epsilon}{numeric; convergence criterion}
 

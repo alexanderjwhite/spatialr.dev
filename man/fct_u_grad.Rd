@@ -11,7 +11,7 @@ fct_u_grad(x, u, v, uv_exp, w, j, one, lambda, cores)
 
 \item{uv_exp}{matrix; stored matrix multiplication}
 
-\item{w}{matrix; distance matrix}
+\item{w}{matrix; distance matrix. If null, computed on the fly.}
 
 \item{j}{matrix; matrix of 1s}
 

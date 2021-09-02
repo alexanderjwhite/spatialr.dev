@@ -11,7 +11,11 @@ spatial_clust(
   coords,
   lambda,
   w = NULL,
-  optimizer = "fct_amsgrad",
+  distance = "euclidean",
+  method = "dist",
+  k = NULL,
+  alpha = 1,
+  optimizer = fct_opt_amsgrad,
   epsilon = 1e-08,
   max_iter = 1000,
   verbose = TRUE,
@@ -30,9 +34,17 @@ spatial_clust(
 
 \item{lambda}{numeric; penalization parameter}
 
-\item{w}{matrix; distance matrix}
+\item{w}{matrix; distance matrix. If null, computed on the fly.}
 
-\item{optimizer}{internal function; only fct_amsgrad for now}
+\item{distance}{the distance measure to be used. This must be one of "euclidean", "maximum", "manhattan", "canberra", "binary" or "minkowski". Any unambiguous substring can be given.}
+
+\item{method}{string; "dist" by default uses \eqn{w_{ij} = \exp(-\alpha \times distance_{ij})} in the w computation. Other options include "knn_1" which uses k nearest neighbors and uses neighbors as 1 and non-neighbors as 0. "knn_2" uses \eqn{w_{ij} = \exp(-\alpha \times distance_{ij})} for neighbors and 0 for non-neighbors.}
+
+\item{k}{integer; if knn = TRUE, number of nearest neighbors to consider}
+
+\item{alpha}{numeric; parameter to adjust distance calculation}
+
+\item{optimizer}{internal optimization function; options include: fct_opt_amsgrad, fct_opt_adadelt, fct_opt_adam, fct_opt_adamax, fct_opt_grad_desc, fct_opt_nadam, fct_opt_rmsprop.}
 
 \item{epsilon}{numeric; convergence criterion}
 
