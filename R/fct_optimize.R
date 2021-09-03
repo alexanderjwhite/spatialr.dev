@@ -58,6 +58,7 @@ fct_optimize <- function(x, u, v, w, lambda, optimizer, epsilon, max_iter, verbo
     
     u <- u_prev + u_update
     v <- v_prev + v_update
+    v <- apply(v, 2, function(x){x/norm(x, type="2")})
     
     
     objective_prev <- objective
