@@ -4,10 +4,14 @@
 \alias{fct_objective}
 \title{Internal Objective Function}
 \usage{
-fct_objective(x, u, v, cores)
+fct_objective(x, u, v, w, j, lambda, cores)
 }
 \arguments{
 \item{x}{matrix; data matrix}
+
+\item{w}{matrix; distance matrix. If null, computed on the fly.}
+
+\item{lambda}{numeric; penalization parameter}
 
 \item{cores}{integer; number of cores to use}
 }

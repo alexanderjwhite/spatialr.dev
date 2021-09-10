@@ -34,7 +34,7 @@ fct_optimize <- function(x, u, v, w, lambda, optimizer, epsilon, max_iter, verbo
   u_state <- NULL
   v_state <- NULL
   
-  j <- matrix(1, nrow = nrow(x), ncol = ncol(x))
+  j <- matrix(1, nrow = ncol(u), ncol = nrow(u))
   u_iter <- u
   v_iter <- v
   one <- matrix(1, nrow = nrow(u), ncol = ncol(u))
@@ -58,11 +58,11 @@ fct_optimize <- function(x, u, v, w, lambda, optimizer, epsilon, max_iter, verbo
     
     u <- u_prev + u_update
     v <- v_prev + v_update
-    v <- apply(v, 2, function(x){x/norm(x, type="2")})
+    v <- apply(v, 2, function(y){y/norm(y, type="2")})
     
     
     objective_prev <- objective
-    objective <- f_ojb(x, u, v, cores)
+    objective <- f_ojb(x, u, v, w, j, lambda, cores)
     diff <- abs(objective - objective_prev)/abs(objective_prev)
     
     if(is.nan(diff)){diff <- Inf}

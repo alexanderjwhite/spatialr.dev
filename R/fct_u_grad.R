@@ -11,5 +11,5 @@
 #' 
 #' @examples
 fct_u_grad <- function(x, u, v, uv_exp, w, j, one, lambda, cores){
-  (t(x)-exp(u%*%t(v)))%*%v-2*lambda*(sum(diag(j%*%t(w)%*%u))-t(w)%*%u - w%*%u)
+  (x-exp(u%*%t(v)))%*%v-2*lambda*(2*sum(diag(j%*%t(w)%*%u))-t(w)%*%u - w%*%u)
 }

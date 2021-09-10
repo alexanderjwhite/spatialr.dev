@@ -17,7 +17,7 @@ grad_u <- function(x, u, v, uv_exp, w, j, one, lambda, n_cores) {
     .Call(`_spatialr_dev_grad_u`, x, u, v, uv_exp, w, j, one, lambda, n_cores)
 }
 
-objective_c <- function(x, u, v, n_cores) {
-    .Call(`_spatialr_dev_objective_c`, x, u, v, n_cores)
+objective_c <- function(x, u, v, w, j, lambda, n_cores) {
+    .Call(`_spatialr_dev_objective_c`, x, u, v, w, j, lambda, n_cores)
 }
 

@@ -32,7 +32,7 @@ SEXP grad_v(const Eigen::Map<Eigen::MatrixXd> x,
             int n_cores){
   
   Eigen::setNbThreads(n_cores);
-  Eigen::MatrixXd C = ((x.transpose() - uv_exp).transpose()) * u;
+  Eigen::MatrixXd C = ((x - uv_exp).transpose()) * u;
   return Rcpp::wrap(C);
 }
 
@@ -48,17 +48,21 @@ SEXP grad_u(const Eigen::Map<Eigen::MatrixXd> x,
             int n_cores){
   
   Eigen::setNbThreads(n_cores);
-  Eigen::MatrixXd C = ((x.transpose() - uv_exp) * v) - 2*lambda*(((((j * w.transpose()) * u).diagonal()).sum())*one - (w.transpose() * u) - (w * u));
+  Eigen::MatrixXd C = ((x - uv_exp) * v) - 2*lambda*(((((j * w.transpose()) * u).diagonal()).sum())*one - (w.transpose() * u) - (w * u));
   return Rcpp::wrap(C);
 }
 
 // [[Rcpp::export]]
 SEXP objective_c(const Eigen::Map<Eigen::MatrixXd> x,
-               Eigen::Map<Eigen::MatrixXd> u, 
-               Eigen::Map<Eigen::MatrixXd> v,
-               int n_cores){
+                 Eigen::Map<Eigen::MatrixXd> u, 
+                 Eigen::Map<Eigen::MatrixXd> v,
+                 Eigen::Map<Eigen::MatrixXd> w,
+                 Eigen::Map<Eigen::MatrixXd> j,
+                 double lambda,
+                 int n_cores){
   
   Eigen::setNbThreads(n_cores);
-  double C = ((u * v.transpose()) * x.transpose()).sum() - ((u * v.transpose()).array().exp()).sum();
-  return Rcpp::wrap(C);
+  double L = ((u * v.transpose()) * x).sum() - ((u * v.transpose()).array().exp()).sum();
+  double P = 2*lambda*((w.transpose()*(((u.cwiseProduct(u)) * j) - u*(u.transpose()))).diagonal()).sum();
+  return Rcpp::wrap(L - P);
 }
