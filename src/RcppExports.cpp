@@ -83,6 +83,34 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// lik_c
+SEXP lik_c(const Eigen::Map<Eigen::MatrixXd> x, Eigen::Map<Eigen::MatrixXd> u, Eigen::Map<Eigen::MatrixXd> v, int n_cores);
+RcppExport SEXP _spatialr_dev_lik_c(SEXP xSEXP, SEXP uSEXP, SEXP vSEXP, SEXP n_coresSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type x(xSEXP);
+    Rcpp::traits::input_parameter< Eigen::Map<Eigen::MatrixXd> >::type u(uSEXP);
+    Rcpp::traits::input_parameter< Eigen::Map<Eigen::MatrixXd> >::type v(vSEXP);
+    Rcpp::traits::input_parameter< int >::type n_cores(n_coresSEXP);
+    rcpp_result_gen = Rcpp::wrap(lik_c(x, u, v, n_cores));
+    return rcpp_result_gen;
+END_RCPP
+}
+// penal_c
+SEXP penal_c(const Eigen::Map<Eigen::MatrixXd> u, Eigen::Map<Eigen::MatrixXd> w, Eigen::Map<Eigen::MatrixXd> j, int n_cores);
+RcppExport SEXP _spatialr_dev_penal_c(SEXP uSEXP, SEXP wSEXP, SEXP jSEXP, SEXP n_coresSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type u(uSEXP);
+    Rcpp::traits::input_parameter< Eigen::Map<Eigen::MatrixXd> >::type w(wSEXP);
+    Rcpp::traits::input_parameter< Eigen::Map<Eigen::MatrixXd> >::type j(jSEXP);
+    Rcpp::traits::input_parameter< int >::type n_cores(n_coresSEXP);
+    rcpp_result_gen = Rcpp::wrap(penal_c(u, w, j, n_cores));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_spatialr_dev_mat_mul_c", (DL_FUNC) &_spatialr_dev_mat_mul_c, 3},
@@ -90,6 +118,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_spatialr_dev_grad_v", (DL_FUNC) &_spatialr_dev_grad_v, 5},
     {"_spatialr_dev_grad_u", (DL_FUNC) &_spatialr_dev_grad_u, 9},
     {"_spatialr_dev_objective_c", (DL_FUNC) &_spatialr_dev_objective_c, 7},
+    {"_spatialr_dev_lik_c", (DL_FUNC) &_spatialr_dev_lik_c, 4},
+    {"_spatialr_dev_penal_c", (DL_FUNC) &_spatialr_dev_penal_c, 4},
     {NULL, NULL, 0}
 };
 

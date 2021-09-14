@@ -9,7 +9,8 @@ spatial_clust(
   u_init,
   v_init,
   coords,
-  lambda,
+  lambda = NULL,
+  grid = 5,
   w = NULL,
   distance = "euclidean",
   method = "dist",
@@ -33,6 +34,8 @@ spatial_clust(
 \item{coords}{matrix or data frame; euclidean coordinates in separate columns}
 
 \item{lambda}{numeric; penalization parameter}
+
+\item{grid}{integer; lamabda search space size}
 
 \item{w}{matrix; distance matrix. If null, computed on the fly.}
 

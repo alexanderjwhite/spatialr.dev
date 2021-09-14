@@ -66,3 +66,25 @@ SEXP objective_c(const Eigen::Map<Eigen::MatrixXd> x,
   double P = 2*lambda*((w.transpose()*(((u.cwiseProduct(u)) * j) - u*(u.transpose()))).diagonal()).sum();
   return Rcpp::wrap(L - P);
 }
+
+// [[Rcpp::export]]
+SEXP lik_c(const Eigen::Map<Eigen::MatrixXd> x,
+                 Eigen::Map<Eigen::MatrixXd> u, 
+                 Eigen::Map<Eigen::MatrixXd> v,
+                 int n_cores){
+  
+  Eigen::setNbThreads(n_cores);
+  double L = ((u * v.transpose()) * x).sum() - ((u * v.transpose()).array().exp()).sum();
+  return Rcpp::wrap(L);
+}
+
+// [[Rcpp::export]]
+SEXP penal_c(const Eigen::Map<Eigen::MatrixXd> u, 
+                 Eigen::Map<Eigen::MatrixXd> w,
+                 Eigen::Map<Eigen::MatrixXd> j,
+                 int n_cores){
+  
+  Eigen::setNbThreads(n_cores);
+  double P = 2*((w.transpose()*(((u.cwiseProduct(u)) * j) - u*(u.transpose()))).diagonal()).sum();
+  return Rcpp::wrap(P);
+}

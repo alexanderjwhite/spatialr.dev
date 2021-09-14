@@ -21,3 +21,11 @@ objective_c <- function(x, u, v, w, j, lambda, n_cores) {
     .Call(`_spatialr_dev_objective_c`, x, u, v, w, j, lambda, n_cores)
 }
 
+lik_c <- function(x, u, v, n_cores) {
+    .Call(`_spatialr_dev_lik_c`, x, u, v, n_cores)
+}
+
+penal_c <- function(u, w, j, n_cores) {
+    .Call(`_spatialr_dev_penal_c`, u, w, j, n_cores)
+}
+
