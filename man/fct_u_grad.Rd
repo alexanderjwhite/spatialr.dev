@@ -17,7 +17,7 @@ fct_u_grad(x, u, v, uv_exp, w, j, one, lambda, cores)
 
 \item{one}{matrix; matrix of 1s with same shape as u}
 
-\item{lambda}{numeric; penalization parameter}
+\item{lambda}{numeric; penalization parameter. set to NULL for lambda selection.}
 
 \item{cores}{integer; number of cores to use}
 }

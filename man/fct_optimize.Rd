@@ -23,7 +23,7 @@ fct_optimize(
 
 \item{w}{matrix; distance matrix. If null, computed on the fly.}
 
-\item{lambda}{numeric; penalization parameter}
+\item{lambda}{numeric; penalization parameter. set to NULL for lambda selection.}
 
 \item{optimizer}{internal optimization function; options include: fct_opt_amsgrad, fct_opt_adadelt, fct_opt_adam, fct_opt_adamax, fct_opt_grad_desc, fct_opt_nadam, fct_opt_rmsprop.}
 

@@ -11,7 +11,7 @@ fct_objective(x, u, v, w, j, lambda, cores)
 
 \item{w}{matrix; distance matrix. If null, computed on the fly.}
 
-\item{lambda}{numeric; penalization parameter}
+\item{lambda}{numeric; penalization parameter. set to NULL for lambda selection.}
 
 \item{cores}{integer; number of cores to use}
 }

@@ -33,9 +33,9 @@ spatial_clust(
 
 \item{coords}{matrix or data frame; euclidean coordinates in separate columns}
 
-\item{lambda}{numeric; penalization parameter}
+\item{lambda}{numeric; penalization parameter. set to NULL for lambda selection.}
 
-\item{grid}{integer; lamabda search space size}
+\item{grid}{integer; lamabda search space size. used only if lambda = NULL.}
 
 \item{w}{matrix; distance matrix. If null, computed on the fly.}
 

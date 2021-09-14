@@ -4,8 +4,8 @@
 #' @param u_init matrix; u initialization matrix
 #' @param v_init matrix; v initialization matrix
 #' @param coords matrix or data frame; euclidean coordinates in separate columns
-#' @param lambda numeric; penalization parameter
-#' @param grid integer; lamabda search space size
+#' @param lambda numeric; penalization parameter. set to NULL for lambda selection.
+#' @param grid integer; lamabda search space size. used only if lambda = NULL.
 #' @param w matrix; distance matrix. If null, computed on the fly. 
 #' @param distance the distance measure to be used. This must be one of "euclidean", "maximum", "manhattan", "canberra", "binary" or "minkowski". Any unambiguous substring can be given. 
 #' @param method string; "dist" by default uses \eqn{w_{ij} = \exp(-\alpha \times distance_{ij})} in the w computation. Other options include "knn_1" which uses k nearest neighbors and uses neighbors as 1 and non-neighbors as 0. "knn_2" uses \eqn{w_{ij} = \exp(-\alpha \times distance_{ij})} for neighbors and 0 for non-neighbors.
