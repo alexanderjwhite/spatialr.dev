@@ -7,5 +7,5 @@
 #'
 #' @examples
 fct_lik <- function(x, u, v,cores){
-  return(sum((u %*% t(v)) %*% x) - sum(exp(u %*% t(v))))
+  return(sum(x%*%(u %*% t(v))) - sum(exp(u %*% t(v))))
 }

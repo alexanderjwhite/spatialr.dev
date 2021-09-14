@@ -35,13 +35,13 @@ spatial_clust <- function(x, u_init, v_init, coords, lambda = NULL, grid = 5, w 
     result <- NULL
     base_run <- fct_optimize(x, u_init, v_init, w, lambda = 0, optimizer = optimizer, epsilon = epsilon, max_iter = max_iter, verbose = verbose, fast = fast, cores = cores)
     r0 <- base_run$r
-    lo <- 0.001*r0
-    hi <- 100*r0
+    lo <- 0.0001*r0
+    hi <- 10000*r0
     if(verbose){print(paste("Done. r0 = ", round(r0, digits = 5)))}
     lambda_seq <- seq(lo, hi, length.out = grid)
     if(verbose){print(paste("Ranging lambda from",round(lo, 5),"to", round(hi, 5), "with a grid of", grid))}
     count <- 1
-    for(lambda in lambda_seq){
+    for(lambda in abs(lambda_seq)){
       if(verbose){print(paste("Search",count))}
       count <- count + 1
       res <- fct_optimize(x, u_init, v_init, w, lambda, optimizer = optimizer, epsilon = epsilon, max_iter = max_iter, verbose = verbose, fast = fast, cores = cores)

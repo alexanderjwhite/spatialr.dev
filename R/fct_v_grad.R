@@ -8,5 +8,5 @@
 #'
 #' @examples
 fct_v_grad <- function(x, u, v, uv_exp, cores){
-  return(t(x-exp(u%*%t(v)))%*%u)
+  return(t(t(x)-exp(u%*%t(v)))%*%u)
 }
