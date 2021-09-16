@@ -1,6 +1,8 @@
 #' Internal Optimization Function
 #'
 #' @inheritParams spatial_clust
+#' @param u matrix; u matrix
+#' @param v matrix; v matrix
 #'
 #' @return list of results
 #' @export
@@ -12,19 +14,16 @@
 #' @examples 
 fct_optimize <- function(x, u, v, w, lambda, optimizer, epsilon, max_iter, verbose, fast, cores){
   
-  # if(optimizer == "fct_amsgrad"){optimize <- fct_amsgrad}
   optimize <- optimizer
   if(fast){
     f_u_grad <- grad_u
     f_v_grad <- grad_v
-    f_ojb <- objective_c
     f_exp_uv <- exp_uv
     f_lik <- lik_c
     f_penal <- penal_c
   } else {
     f_u_grad <- fct_u_grad
     f_v_grad <- fct_v_grad
-    f_ojb <- fct_objective
     f_exp_uv <- fct_exp_uv
     f_lik <- fct_lik
     f_penal <- fct_penal

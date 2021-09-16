@@ -9,6 +9,10 @@ fct_u_grad(x, u, v, uv_exp, w, j, one, lambda, cores)
 \arguments{
 \item{x}{matrix; data matrix}
 
+\item{u}{matrix; u matrix}
+
+\item{v}{matrix; v matrix}
+
 \item{uv_exp}{matrix; stored matrix multiplication}
 
 \item{w}{matrix; distance matrix. If null, computed on the fly.}

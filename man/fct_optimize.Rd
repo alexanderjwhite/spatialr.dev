@@ -21,6 +21,10 @@ fct_optimize(
 \arguments{
 \item{x}{matrix; data matrix}
 
+\item{u}{matrix; u matrix}
+
+\item{v}{matrix; v matrix}
+
 \item{w}{matrix; distance matrix. If null, computed on the fly.}
 
 \item{lambda}{numeric; penalization parameter. set to NULL for lambda selection.}

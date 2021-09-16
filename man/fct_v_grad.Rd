@@ -9,6 +9,10 @@ fct_v_grad(x, u, v, uv_exp, cores)
 \arguments{
 \item{x}{matrix; data matrix}
 
+\item{u}{matrix; u matrix}
+
+\item{v}{matrix; v matrix}
+
 \item{uv_exp}{matrix; stored matrix multiplication}
 
 \item{cores}{integer; number of cores to use}

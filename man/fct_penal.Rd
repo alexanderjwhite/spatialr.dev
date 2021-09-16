@@ -7,12 +7,16 @@
 fct_penal(u, w, j, cores)
 }
 \arguments{
+\item{u}{matrix; u matrix}
+
 \item{w}{matrix; distance matrix. If null, computed on the fly.}
+
+\item{j}{matrix; matrix of 1s}
 
 \item{cores}{integer; number of cores to use}
 }
 \value{
-
+penalization value
 }
 \description{
 Compute the penalty portion of the objective function

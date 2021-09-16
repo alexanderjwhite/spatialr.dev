@@ -1,8 +1,9 @@
 #' Compute the penalty portion of the objective function
 #'
-#' @inheritParams spatial_clust
+#' @inheritParams fct_optimize
+#' @param j matrix; matrix of 1s
 #'
-#' @return
+#' @return penalization value
 #' @export
 #'
 #' @examples

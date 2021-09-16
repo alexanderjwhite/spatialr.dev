@@ -3,7 +3,6 @@
 export(fct_dist_matrix)
 export(fct_exp_uv)
 export(fct_lik)
-export(fct_objective)
 export(fct_opt_adadelta)
 export(fct_opt_adam)
 export(fct_opt_adamax)

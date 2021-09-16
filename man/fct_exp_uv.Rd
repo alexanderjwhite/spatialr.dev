@@ -7,6 +7,10 @@
 fct_exp_uv(u, v, cores)
 }
 \arguments{
+\item{u}{matrix; u matrix}
+
+\item{v}{matrix; v matrix}
+
 \item{cores}{integer; number of cores to use}
 }
 \value{

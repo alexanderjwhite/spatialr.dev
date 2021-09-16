@@ -9,6 +9,10 @@ fct_lik(x, u, v, cores)
 \arguments{
 \item{x}{matrix; data matrix}
 
+\item{u}{matrix; u matrix}
+
+\item{v}{matrix; v matrix}
+
 \item{cores}{integer; number of cores to use}
 }
 \value{
