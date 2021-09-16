@@ -1,13 +1,12 @@
 Package: spatialr.dev
-Title: Research, development and testing of spatial clustering project
-Version: 0.0.0.9000
+Title: Research, Development and Testing of Spatial Clustering Project
+Version: 1.0.0.9000
 Authors@R: 
     person(given = "Alex",
            family = "White",
            role = c("aut", "cre"),
-           email = "whitealj@iu.edu",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+           email = "whitealj@iu.edu")
+Description: This is a package used to develop a spatial clustering method. User friendly package to be released upon publication.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
