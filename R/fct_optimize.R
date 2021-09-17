@@ -61,7 +61,12 @@ fct_optimize <- function(x, u, v, w, lambda, optimizer, epsilon, max_iter, verbo
     
     u <- u_prev + u_update
     v <- v_prev + v_update
-    v <- apply(v, 2, function(y){y/norm(y, type="2")})
+    
+    q <- diag(apply(v, 2, function(y){norm(y, type="2")}))
+    q_inv <- solve(q)
+
+    u <- u %*% q_inv
+    v <- v %*% q
     
     
     objective_prev <- objective
@@ -72,7 +77,7 @@ fct_optimize <- function(x, u, v, w, lambda, optimizer, epsilon, max_iter, verbo
     diff <- abs(objective - objective_prev)/abs(objective_prev)
     
     if(is.nan(diff)){diff <- Inf}
-    if(verbose & ((iter %% 10) == 0)){print(paste0("Objective convergence | r at iteration ", iter, ": ", round(diff, digits = 10), "| ", round(r, digits = 2)))}
+    if(verbose & ((iter %% 10) == 0)){print(paste0("Objective convergence | r at iteration ", iter, ": ", round(objective, digits = 10), "|lik:", round(lik, digits = 2), "|penal:", round(penal, digits = 2)))}
     if((diff < epsilon) | (iter >= max_iter)){converged <- TRUE}
 
   }
