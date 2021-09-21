@@ -4,7 +4,7 @@
 \alias{fct_u_grad}
 \title{Internal U Gradient Function}
 \usage{
-fct_u_grad(x, u, v, uv_exp, w, j, one, lambda, cores)
+fct_u_grad(x, u, v, uv_exp, w, j2, one, lambda, cores)
 }
 \arguments{
 \item{x}{matrix; data matrix}
@@ -17,7 +17,7 @@ fct_u_grad(x, u, v, uv_exp, w, j, one, lambda, cores)
 
 \item{w}{matrix; distance matrix. If null, computed on the fly.}
 
-\item{j}{matrix; matrix of 1s}
+\item{j2}{matrix; matrix of 1s with dimension r by n}
 
 \item{one}{matrix; matrix of 1s with same shape as u}
 

@@ -4,7 +4,7 @@
 \alias{fct_lik}
 \title{Compute the likelihood portion of the objective function}
 \usage{
-fct_lik(x, u, v, cores)
+fct_lik(x, u, v, uv_exp, j1, cores)
 }
 \arguments{
 \item{x}{matrix; data matrix}
@@ -12,6 +12,8 @@ fct_lik(x, u, v, cores)
 \item{u}{matrix; u matrix}
 
 \item{v}{matrix; v matrix}
+
+\item{j1}{matrix; matrix of 1s with dimension p by n}
 
 \item{cores}{integer; number of cores to use}
 }

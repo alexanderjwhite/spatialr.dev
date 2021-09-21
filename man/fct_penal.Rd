@@ -4,14 +4,14 @@
 \alias{fct_penal}
 \title{Compute the penalty portion of the objective function}
 \usage{
-fct_penal(u, w, j, cores)
+fct_penal(u, w, j2, cores)
 }
 \arguments{
 \item{u}{matrix; u matrix}
 
 \item{w}{matrix; distance matrix. If null, computed on the fly.}
 
-\item{j}{matrix; matrix of 1s}
+\item{j2}{matrix; matrix of 1s with dimension r by n}
 
 \item{cores}{integer; number of cores to use}
 }
