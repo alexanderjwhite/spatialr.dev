@@ -9,5 +9,4 @@
 #' @examples
 fct_lik <- function(x, u, v, uv_exp, j1, cores){
   sum(diag(t(x)%*%u%*%t(v))) - sum(diag(uv_exp%*%j1))
-  #return(sum((u %*% t(v))%*%t(x)) - sum(exp(u %*% t(v))))
 }
