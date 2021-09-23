@@ -8,5 +8,5 @@
 #'
 #' @examples
 fct_penal <- function(u, w, j2, cores){
-  return(sum(diag(t(w)%*%((u^2)%*%j2 + t(j2)%*%(t(u)^2) - u%*%t(u)))))
+  return(sum(diag(t(w)%*%((u^2)%*%j2 + t(j2)%*%(t(u)^2) - 2*u%*%t(u)))))
 }

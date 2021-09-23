@@ -33,13 +33,13 @@ SEXP grad_u(const Eigen::Map<Eigen::MatrixXd> x,
             Eigen::Map<Eigen::MatrixXd> v,
             Eigen::Map<Eigen::MatrixXd> uv_exp,
             Eigen::Map<Eigen::MatrixXd> w,
-            Eigen::Map<Eigen::MatrixXd> j,
+            Eigen::Map<Eigen::MatrixXd> j2,
             Eigen::Map<Eigen::MatrixXd> one,
             double lambda,
             int n_cores){
   
   Eigen::setNbThreads(n_cores);
-  Eigen::MatrixXd C = ((x - uv_exp) * v) - 2*lambda*(((((j * w.transpose()) * u).diagonal()).sum())*one - (w.transpose() * u) - (w * u));
+  Eigen::MatrixXd C = ((x - uv_exp) * v) - lambda*((2 * w.transpose() * j2.transpose()).cwiseProduct(u) + (2 * w.transpose() * j2.transpose()).cwiseProduct(u) - w.transpose() * u - w * u);
   return Rcpp::wrap(C);
 }
 
@@ -47,20 +47,25 @@ SEXP grad_u(const Eigen::Map<Eigen::MatrixXd> x,
 SEXP lik_c(const Eigen::Map<Eigen::MatrixXd> x,
                  Eigen::Map<Eigen::MatrixXd> u, 
                  Eigen::Map<Eigen::MatrixXd> v,
+                 Eigen::Map<Eigen::MatrixXd> uv_exp,
+                 Eigen::Map<Eigen::MatrixXd> j1,
                  int n_cores){
   
   Eigen::setNbThreads(n_cores);
-  double L = ((u * v.transpose()) * x).sum() - ((u * v.transpose()).array().exp()).sum();
+  double L = ((x.transpose() * u * v.transpose()).diagonal()).sum() - ((uv_exp * j1).diagonal()).sum() ;
   return Rcpp::wrap(L);
 }
 
 // [[Rcpp::export]]
 SEXP penal_c(const Eigen::Map<Eigen::MatrixXd> u, 
                  Eigen::Map<Eigen::MatrixXd> w,
-                 Eigen::Map<Eigen::MatrixXd> j,
+                 Eigen::Map<Eigen::MatrixXd> j2,
                  int n_cores){
   
   Eigen::setNbThreads(n_cores);
-  double P = 2*((w.transpose()*(((u.cwiseProduct(u)) * j) - u*(u.transpose()))).diagonal()).sum();
+  double P = (w.transpose() * ((u.cwiseProduct(u)) * j2 + j2.transpose() * (u.transpose().cwiseProduct(u.transpose())) - 2 * u * u.transpose())).diagonal().sum();
   return Rcpp::wrap(P);
 }
+
+
+

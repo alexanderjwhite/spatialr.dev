@@ -14,6 +14,7 @@
 #' @param optimizer internal optimization function; options include: fct_opt_amsgrad, fct_opt_adadelt, fct_opt_adam, fct_opt_adamax, fct_opt_grad_desc, fct_opt_nadam, fct_opt_rmsprop.
 #' @param epsilon numeric; convergence criterion
 #' @param max_iter integer; maximum number of iterations
+#' @param norm_comp string; "u" to normalize u, "v" to normalize v, "none" to skip component normalization.
 #' @param verbose TRUE or FALSE; print to screen?
 #' @param fast TRUE or FALSE; use compiled c?
 #' @param cores integer; number of cores to use
@@ -22,7 +23,7 @@
 #' @export
 #'
 #' @examples 
-spatial_clust <- function(x, u_init, v_init, coords, lambda = NULL, grid = 5, w = NULL, distance = "euclidean", method = "dist", k = NULL, alpha = 1, optimizer = fct_opt_amsgrad, epsilon = 1e-8, max_iter = 1e3, verbose = TRUE, fast = TRUE, cores = 1){
+spatial_clust <- function(x, u_init, v_init, coords, lambda = NULL, grid = 5, w = NULL, distance = "euclidean", method = "dist", k = NULL, alpha = 1, optimizer = fct_opt_amsgrad, epsilon = 1e-8, max_iter = 1e3, norm_comp = "none", verbose = TRUE, fast = TRUE, cores = 1){
   
   # ToDo: Check X matrix for appropriate conditions
   
@@ -30,25 +31,30 @@ spatial_clust <- function(x, u_init, v_init, coords, lambda = NULL, grid = 5, w 
     w <- fct_dist_matrix(coords, distance = distance, method = method, k = k, alpha = alpha, verbose = verbose)
   }
   
+  base_run <- fct_optimize(x, u_init, v_init, w, lambda = 0, optimizer = optimizer, epsilon = epsilon, max_iter = max_iter, norm_comp = norm_comp, verbose = verbose, fast = fast, cores = cores)
+  
   if(is.null(lambda)){
     if(verbose){print("No lambda specified, computing appropriate range...")}
     result <- NULL
-    base_run <- fct_optimize(x, u_init, v_init, w, lambda = 0, optimizer = optimizer, epsilon = epsilon, max_iter = max_iter, verbose = verbose, fast = fast, cores = cores)
+    
     r0 <- base_run$r
     lo <- 0.001*r0
-    hi <- 100*r0
+    hi <- 1000*r0
+    
     if(verbose){print(paste("Done. r0 = ", round(r0, digits = 5)))}
+    
     lambda_seq <- seq(lo, hi, length.out = grid)
+    
     if(verbose){print(paste("Ranging lambda from",round(lo, 5),"to", round(hi, 5), "with a grid of", grid))}
     count <- 1
     for(lambda in abs(lambda_seq)){
       if(verbose){print(paste("Search",count))}
       count <- count + 1
-      res <- fct_optimize(x, u_init, v_init, w, lambda, optimizer = optimizer, epsilon = epsilon, max_iter = max_iter, verbose = verbose, fast = fast, cores = cores)
+      res <- fct_optimize(x, base_run$u, base_run$v, w, lambda, optimizer = optimizer, epsilon = epsilon, max_iter = max_iter, norm_comp = norm_comp, verbose = verbose, fast = fast, cores = cores)
       result <- append(list(res),result)
     }
   } else {
-    result <- fct_optimize(x, u_init, v_init, w, lambda, optimizer = optimizer, epsilon = epsilon, max_iter = max_iter, verbose = verbose, fast = fast, cores = cores)
+    result <- fct_optimize(x, base_run$u, base_run$v, w, lambda, optimizer = optimizer, epsilon = epsilon, max_iter = max_iter, norm_comp = norm_comp, verbose = verbose, fast = fast, cores = cores)
   }
   
   

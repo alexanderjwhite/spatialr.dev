@@ -13,6 +13,7 @@ fct_optimize(
   optimizer,
   epsilon,
   max_iter,
+  norm_comp,
   verbose,
   fast,
   cores
@@ -34,6 +35,8 @@ fct_optimize(
 \item{epsilon}{numeric; convergence criterion}
 
 \item{max_iter}{integer; maximum number of iterations}
+
+\item{norm_comp}{string; "u" to normalize u, "v" to normalize v, "none" to skip component normalization.}
 
 \item{verbose}{TRUE or FALSE; print to screen?}
 

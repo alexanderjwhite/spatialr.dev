@@ -1,6 +1,7 @@
 #' Compute the likelihood portion of the objective function
 #'
 #' @inheritParams fct_optimize
+#' @param uv_exp matrix; stored matrix multiplication
 #' @param j1 matrix; matrix of 1s with dimension p by n
 #'
 #' @return likelihood value

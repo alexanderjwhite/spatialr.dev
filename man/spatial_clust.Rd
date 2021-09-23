@@ -19,6 +19,7 @@ spatial_clust(
   optimizer = fct_opt_amsgrad,
   epsilon = 1e-08,
   max_iter = 1000,
+  norm_comp = "none",
   verbose = TRUE,
   fast = TRUE,
   cores = 1
@@ -52,6 +53,8 @@ spatial_clust(
 \item{epsilon}{numeric; convergence criterion}
 
 \item{max_iter}{integer; maximum number of iterations}
+
+\item{norm_comp}{string; "u" to normalize u, "v" to normalize v, "none" to skip component normalization.}
 
 \item{verbose}{TRUE or FALSE; print to screen?}
 

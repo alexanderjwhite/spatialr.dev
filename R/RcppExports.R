@@ -9,15 +9,15 @@ grad_v <- function(x, u, v, uv_exp, n_cores) {
     .Call(`_spatialr_dev_grad_v`, x, u, v, uv_exp, n_cores)
 }
 
-grad_u <- function(x, u, v, uv_exp, w, j, one, lambda, n_cores) {
-    .Call(`_spatialr_dev_grad_u`, x, u, v, uv_exp, w, j, one, lambda, n_cores)
+grad_u <- function(x, u, v, uv_exp, w, j2, one, lambda, n_cores) {
+    .Call(`_spatialr_dev_grad_u`, x, u, v, uv_exp, w, j2, one, lambda, n_cores)
 }
 
-lik_c <- function(x, u, v, n_cores) {
-    .Call(`_spatialr_dev_lik_c`, x, u, v, n_cores)
+lik_c <- function(x, u, v, uv_exp, j1, n_cores) {
+    .Call(`_spatialr_dev_lik_c`, x, u, v, uv_exp, j1, n_cores)
 }
 
-penal_c <- function(u, w, j, n_cores) {
-    .Call(`_spatialr_dev_penal_c`, u, w, j, n_cores)
+penal_c <- function(u, w, j2, n_cores) {
+    .Call(`_spatialr_dev_penal_c`, u, w, j2, n_cores)
 }
 

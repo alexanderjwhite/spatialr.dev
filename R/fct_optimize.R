@@ -12,7 +12,7 @@
 #' @import RcppEigen
 #'
 #' @examples 
-fct_optimize <- function(x, u, v, w, lambda, optimizer, epsilon, max_iter, verbose, fast, cores){
+fct_optimize <- function(x, u, v, w, lambda, optimizer, epsilon, max_iter, norm_comp, verbose, fast, cores){
   
   optimize <- optimizer
   if(fast){
@@ -33,21 +33,35 @@ fct_optimize <- function(x, u, v, w, lambda, optimizer, epsilon, max_iter, verbo
   if(verbose){print("Optimizing...")}
   iter <- 0
   objective <- -Inf
+  obj_track <- NULL
+  lik_track <- NULL
+  penal_track <- NULL
   converged <- FALSE
   u_state <- NULL
   v_state <- NULL
   
   j1 <- matrix(1, nrow = nrow(v), ncol = nrow(u))
   j2 <- matrix(1, nrow = ncol(u), ncol = nrow(u))
-  # u_iter <- u
-  # v_iter <- v
   one <- matrix(1, nrow = nrow(u), ncol = ncol(u))
   
   while(!converged){
-    iter <- iter + 1
+
+    
     u_prev <- u
     v_prev <- v
     uv_exp <- f_exp_uv(u, v, cores)
+    
+    if(iter==0){
+      lik <- f_lik(x, u, v, uv_exp, j1, cores)
+      penal <- f_penal(u, w, j2, cores)
+      objective <- lik-lambda*penal
+      diff <- 0
+      if(verbose){print(paste0("Objective convergence | r at iteration ", iter, ": ", round(objective, digits = 10), "|lik:", round(lik, digits = 2), "|penal:", round(penal, digits = 2)))}
+    }
+    
+    
+    iter <- iter + 1
+    
     u_gradient <- f_u_grad(x, u, v, uv_exp, w, j2, one, lambda, cores)
     v_gradient <- f_v_grad(x, u, v, uv_exp, cores)
     
@@ -63,22 +77,33 @@ fct_optimize <- function(x, u, v, w, lambda, optimizer, epsilon, max_iter, verbo
     u <- u_prev + u_update
     v <- v_prev + v_update
     
-    # q <- diag(apply(v, 2, function(y){norm(y, type="2")}))
-    # q_inv <- solve(q)
-    # 
-    # u <- u %*% q_inv
-    # v <- v %*% q
-    
+    sum_nan <- sum(is.nan(u)) + sum(is.nan(v))
+    if(norm_comp == "u" & sum_nan == 0){
+      q <- diag(apply(u, 2, function(y){norm(y, type="2")}))
+      q_inv <- solve(q)
+      
+      u <- u %*% q_inv
+      v <- v %*% q
+    } else if(norm_comp == "v" & sum_nan == 0){
+      q <- diag(apply(v, 2, function(y){norm(y, type="2")}))
+      q_inv <- solve(q)
+      
+      u <- u %*% q_inv
+      v <- v %*% q
+    }
     
     objective_prev <- objective
     lik <- f_lik(x, u, v, uv_exp, j1, cores)
+    lik_track <- c(lik_track, lik)
     penal <- f_penal(u, w, j2, cores)
+    penal_track <- c(penal_track,penal)
     r <- lik/penal
     objective <- lik-lambda*penal
+    obj_track <- c(obj_track,objective)
     diff <- abs(objective - objective_prev)/abs(objective_prev)
     
     if(is.nan(diff)){diff <- Inf}
-    if(verbose & ((iter %% 10) == 0)){print(paste0("Objective convergence | r at iteration ", iter, ": ", round(objective, digits = 10), "|lik:", round(lik, digits = 2), "|penal:", round(penal, digits = 2)))}
+    if(verbose & ((iter %% 10) == 0)){print(paste0("Objective at iteration ", iter, ": ", round(objective, digits = 10), "|lik:", round(lik, digits = 2), "|penal:", round(penal, digits = 2)))}
     if((diff < epsilon) | (iter >= max_iter)){converged <- TRUE}
 
   }
