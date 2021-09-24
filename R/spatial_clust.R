@@ -38,9 +38,9 @@ spatial_clust <- function(x, u_init, v_init, coords, lambda = NULL, grid = 5, w 
     if(verbose){print("No lambda specified, computing appropriate range...")}
     result <- NULL
     
-    r0 <- base_run$r
+    r0 <- abs(base_run$r)
     lo <- 0.01*r0
-    hi <- 1000*r0
+    hi <- 1e4*r0
     
     if(verbose){print(paste("Done. r0 = ", round(r0, digits = 5)))}
     

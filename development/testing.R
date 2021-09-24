@@ -12,7 +12,7 @@ V0 <- sp_svd$v %*% diag(sp_svd$d)
 
 W=fct_dist_matrix(coords[1:200,], distance = "euclidean", method = "knn_1", k = NULL,alpha = 1, verbose = TRUE)
 
-large_penal <- spatial_clust(x=as.matrix(X), u_init=U0, v_init=V0, max_iter = 2e3, norm_comp = "u", eta = 100, coords=NULL ,lambda = 1e3, w=W, optimizer = fct_opt_amsgrad, fast = FALSE)
+large_penal <- spatial_clust(x=as.matrix(X), u_init=U0, v_init=V0, max_iter = 2e3, norm_comp = "u", eta = 100, coords=NULL ,lambda = NULL, grid = 5, w=W, optimizer = fct_opt_amsgrad, fast = FALSE)
 
 
 diag(apply(V0, 2, function(y){norm(y, type="2")}))
@@ -32,7 +32,7 @@ purrr::map_dfr(large_penal, .f = function(.x){
 }) %>% 
   mutate(lam_penal = lam*penal) %>% 
   ggplot() +
-  geom_point(aes(x = lam, y = lik))
+  geom_point(aes(x = log(lam), y = lik))
 
 
 large_penal[[3]]
