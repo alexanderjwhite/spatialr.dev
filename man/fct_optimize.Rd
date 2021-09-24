@@ -13,7 +13,9 @@ fct_optimize(
   optimizer,
   epsilon,
   max_iter,
-  norm_comp,
+  eta,
+  u_penal = u_penal,
+  v_penal = v_penal,
   verbose,
   fast,
   cores
@@ -36,7 +38,11 @@ fct_optimize(
 
 \item{max_iter}{integer; maximum number of iterations}
 
-\item{norm_comp}{string; "u" to normalize u, "v" to normalize v, "none" to skip component normalization.}
+\item{eta}{numeric; column normal penalization coefficient}
+
+\item{u_penal}{TRUE or FALSE; penalize column normal of u}
+
+\item{v_penal}{TRUE or FALSE; penalize column normal of v}
 
 \item{verbose}{TRUE or FALSE; print to screen?}
 

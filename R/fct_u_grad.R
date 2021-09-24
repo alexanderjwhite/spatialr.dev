@@ -10,6 +10,12 @@
 #' @export
 #' 
 #' @examples
-fct_u_grad <- function(x, u, v, uv_exp, w, j2, one, lambda, cores){
-  (x-uv_exp)%*%v-lambda*(2*(w%*%t(j2))*u+(2*t(w)%*%t(j2))*u-t(w)%*%u - w%*%u)
+fct_u_grad <- function(x, u, v, u_penal, eta, uv_exp, w, j2, one, lambda, cores){
+  if(u_penal){
+    col_penal <- eta*(4*u%*%t(u)%*%u - 4*u)
+    u_grad <- (x-uv_exp)%*%v-lambda*(2*(w%*%t(j2))*u+(2*t(w)%*%t(j2))*u-t(w)%*%u - w%*%u) - col_penal
+  } else {
+    u_grad <- (x-uv_exp)%*%v-lambda*(2*(w%*%t(j2))*u+(2*t(w)%*%t(j2))*u-t(w)%*%u - w%*%u)
+  }
+  return(u_grad)
 }

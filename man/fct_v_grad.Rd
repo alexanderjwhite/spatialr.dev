@@ -4,7 +4,7 @@
 \alias{fct_v_grad}
 \title{Internal V Gradient Function}
 \usage{
-fct_v_grad(x, u, v, uv_exp, cores)
+fct_v_grad(x, u, v, v_penal, eta, uv_exp, cores)
 }
 \arguments{
 \item{x}{matrix; data matrix}
@@ -12,6 +12,10 @@ fct_v_grad(x, u, v, uv_exp, cores)
 \item{u}{matrix; u matrix}
 
 \item{v}{matrix; v matrix}
+
+\item{v_penal}{TRUE or FALSE; penalize column normal of v}
+
+\item{eta}{numeric; column normal penalization coefficient}
 
 \item{uv_exp}{matrix; stored matrix multiplication}
 

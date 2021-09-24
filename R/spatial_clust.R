@@ -15,6 +15,7 @@
 #' @param epsilon numeric; convergence criterion
 #' @param max_iter integer; maximum number of iterations
 #' @param norm_comp string; "u" to normalize u, "v" to normalize v, "none" to skip component normalization.
+#' @param eta numeric; column normal penalization coefficient
 #' @param verbose TRUE or FALSE; print to screen?
 #' @param fast TRUE or FALSE; use compiled c?
 #' @param cores integer; number of cores to use
@@ -23,7 +24,15 @@
 #' @export
 #'
 #' @examples 
-spatial_clust <- function(x, u_init, v_init, coords, lambda = NULL, grid = 5, w = NULL, distance = "euclidean", method = "dist", k = NULL, alpha = 1, optimizer = fct_opt_amsgrad, epsilon = 1e-8, max_iter = 1e3, norm_comp = "none", verbose = TRUE, fast = TRUE, cores = 1){
+spatial_clust <- function(x, u_init, v_init, coords, lambda = NULL, grid = 5, w = NULL, distance = "euclidean", method = "dist", k = NULL, alpha = 1, optimizer = fct_opt_amsgrad, epsilon = 1e-8, max_iter = 1e3, norm_comp = "none", eta = 100, verbose = TRUE, fast = TRUE, cores = 1){
+  
+  u_penal <- FALSE
+  v_penal <- FALSE
+  if(norm_comp == "u"){
+    u_penal <- TRUE
+  } else if(norm_comp == "v"){
+    v_penal <- TRUE
+  }
   
   # ToDo: Check X matrix for appropriate conditions
   
@@ -31,7 +40,7 @@ spatial_clust <- function(x, u_init, v_init, coords, lambda = NULL, grid = 5, w 
     w <- fct_dist_matrix(coords, distance = distance, method = method, k = k, alpha = alpha, verbose = verbose)
   }
   
-  base_run <- fct_optimize(x, u_init, v_init, w, lambda = 0, optimizer = optimizer, epsilon = epsilon, max_iter = max_iter, norm_comp = norm_comp, verbose = verbose, fast = fast, cores = cores)
+  base_run <- fct_optimize(x, u_init, v_init, w, lambda = 0, optimizer = optimizer, epsilon = epsilon, max_iter = max_iter, eta = eta, u_penal = FALSE, v_penal = FALSE, verbose = verbose, fast = fast, cores = cores)
   
   if(is.null(lambda)){
     if(verbose){print("No lambda specified, computing appropriate range...")}
@@ -50,11 +59,11 @@ spatial_clust <- function(x, u_init, v_init, coords, lambda = NULL, grid = 5, w 
     for(lambda in abs(lambda_seq)){
       if(verbose){print(paste("Search",count))}
       count <- count + 1
-      res <- fct_optimize(x, base_run$u, base_run$v, w, lambda, optimizer = optimizer, epsilon = epsilon, max_iter = max_iter, norm_comp = norm_comp, verbose = verbose, fast = fast, cores = cores)
+      res <- fct_optimize(x, base_run$u, base_run$v, w, lambda, optimizer = optimizer, epsilon = epsilon, max_iter = max_iter, eta = eta, u_penal = u_penal, v_penal = v_penal, verbose = verbose, fast = fast, cores = cores)
       result <- append(list(res),result)
     }
   } else {
-    result <- fct_optimize(x, base_run$u, base_run$v, w, lambda, optimizer = optimizer, epsilon = epsilon, max_iter = max_iter, norm_comp = norm_comp, verbose = verbose, fast = fast, cores = cores)
+    result <- fct_optimize(x, base_run$u, base_run$v, w, lambda, optimizer = optimizer, epsilon = epsilon, max_iter = max_iter, eta = eta, u_penal = u_penal, v_penal = v_penal, verbose = verbose, fast = fast, cores = cores)
   }
   
   

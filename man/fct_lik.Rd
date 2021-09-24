@@ -13,6 +13,8 @@ fct_lik(x, u, v, uv_exp, j1, cores)
 
 \item{v}{matrix; v matrix}
 
+\item{uv_exp}{matrix; stored matrix multiplication}
+
 \item{j1}{matrix; matrix of 1s with dimension p by n}
 
 \item{cores}{integer; number of cores to use}

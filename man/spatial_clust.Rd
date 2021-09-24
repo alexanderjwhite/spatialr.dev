@@ -20,6 +20,7 @@ spatial_clust(
   epsilon = 1e-08,
   max_iter = 1000,
   norm_comp = "none",
+  eta = 100,
   verbose = TRUE,
   fast = TRUE,
   cores = 1
@@ -55,6 +56,8 @@ spatial_clust(
 \item{max_iter}{integer; maximum number of iterations}
 
 \item{norm_comp}{string; "u" to normalize u, "v" to normalize v, "none" to skip component normalization.}
+
+\item{eta}{numeric; column normal penalization coefficient}
 
 \item{verbose}{TRUE or FALSE; print to screen?}
 

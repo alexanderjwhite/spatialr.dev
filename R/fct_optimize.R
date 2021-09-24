@@ -3,6 +3,8 @@
 #' @inheritParams spatial_clust
 #' @param u matrix; u matrix
 #' @param v matrix; v matrix
+#' @param u_penal TRUE or FALSE; penalize column normal of u
+#' @param v_penal TRUE or FALSE; penalize column normal of v
 #'
 #' @return list of results
 #' @export
@@ -12,7 +14,7 @@
 #' @import RcppEigen
 #'
 #' @examples 
-fct_optimize <- function(x, u, v, w, lambda, optimizer, epsilon, max_iter, norm_comp, verbose, fast, cores){
+fct_optimize <- function(x, u, v, w, lambda, optimizer, epsilon, max_iter, eta, u_penal = u_penal, v_penal = v_penal, verbose, fast, cores){
   
   optimize <- optimizer
   if(fast){
@@ -62,8 +64,8 @@ fct_optimize <- function(x, u, v, w, lambda, optimizer, epsilon, max_iter, norm_
     
     iter <- iter + 1
     
-    u_gradient <- f_u_grad(x, u, v, uv_exp, w, j2, one, lambda, cores)
-    v_gradient <- f_v_grad(x, u, v, uv_exp, cores)
+    u_gradient <- f_u_grad(x, u, v, u_penal, eta, uv_exp, w, j2, one, lambda, cores)
+    v_gradient <- f_v_grad(x, u, v, v_penal, eta, uv_exp, cores)
     
     u_grad_desc <- optimize(u_gradient, u_state)
     v_grad_desc <- optimize(v_gradient, v_state)
@@ -77,20 +79,6 @@ fct_optimize <- function(x, u, v, w, lambda, optimizer, epsilon, max_iter, norm_
     u <- u_prev + u_update
     v <- v_prev + v_update
     
-    sum_nan <- sum(is.nan(u)) + sum(is.nan(v))
-    if(norm_comp == "u" & sum_nan == 0){
-      q <- diag(apply(u, 2, function(y){norm(y, type="2")}))
-      q_inv <- solve(q)
-      
-      u <- u %*% q_inv
-      v <- v %*% q
-    } else if(norm_comp == "v" & sum_nan == 0){
-      q <- diag(apply(v, 2, function(y){norm(y, type="2")}))
-      q_inv <- solve(q)
-      
-      u <- u %*% q_inv
-      v <- v %*% q
-    }
     
     objective_prev <- objective
     lik <- f_lik(x, u, v, uv_exp, j1, cores)
