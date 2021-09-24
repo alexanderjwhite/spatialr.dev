@@ -26,44 +26,36 @@
 #' @examples 
 spatial_clust <- function(x, u_init, v_init, coords, lambda = NULL, grid = 5, w = NULL, distance = "euclidean", method = "dist", k = NULL, alpha = 1, optimizer = fct_opt_amsgrad, epsilon = 1e-8, max_iter = 1e3, norm_comp = "none", eta = 100, verbose = TRUE, fast = TRUE, cores = 1){
   
-  u_penal <- FALSE
-  v_penal <- FALSE
-  if(norm_comp == "u"){
-    u_penal <- TRUE
-  } else if(norm_comp == "v"){
-    v_penal <- TRUE
-  }
-  
   # ToDo: Check X matrix for appropriate conditions
   
   if(is.null(w)){
     w <- fct_dist_matrix(coords, distance = distance, method = method, k = k, alpha = alpha, verbose = verbose)
   }
   
-  base_run <- fct_optimize(x, u_init, v_init, w, lambda = 0, optimizer = optimizer, epsilon = epsilon, max_iter = max_iter, eta = eta, u_penal = FALSE, v_penal = FALSE, verbose = verbose, fast = fast, cores = cores)
+  base_run <- fct_optimize(x, u_init, v_init, w, lambda = 0, optimizer = optimizer, epsilon = epsilon, max_iter = max_iter, eta = eta, norm_comp = "none", verbose = verbose, fast = fast, cores = cores)
   
   if(is.null(lambda)){
     if(verbose){print("No lambda specified, computing appropriate range...")}
     result <- NULL
     
     r0 <- base_run$r
-    lo <- 0.001*r0
+    lo <- 0.01*r0
     hi <- 1000*r0
     
     if(verbose){print(paste("Done. r0 = ", round(r0, digits = 5)))}
     
-    lambda_seq <- seq(lo, hi, length.out = grid)
+    lambda_seq <- exp(seq(log(lo), log(hi), length.out = grid))
     
     if(verbose){print(paste("Ranging lambda from",round(lo, 5),"to", round(hi, 5), "with a grid of", grid))}
     count <- 1
     for(lambda in abs(lambda_seq)){
       if(verbose){print(paste("Search",count))}
       count <- count + 1
-      res <- fct_optimize(x, base_run$u, base_run$v, w, lambda, optimizer = optimizer, epsilon = epsilon, max_iter = max_iter, eta = eta, u_penal = u_penal, v_penal = v_penal, verbose = verbose, fast = fast, cores = cores)
+      res <- fct_optimize(x, base_run$u, base_run$v, w, lambda, optimizer = optimizer, epsilon = epsilon, max_iter = max_iter, eta = eta, norm_comp = norm_comp, verbose = verbose, fast = fast, cores = cores)
       result <- append(list(res),result)
     }
   } else {
-    result <- fct_optimize(x, base_run$u, base_run$v, w, lambda, optimizer = optimizer, epsilon = epsilon, max_iter = max_iter, eta = eta, u_penal = u_penal, v_penal = v_penal, verbose = verbose, fast = fast, cores = cores)
+    result <- fct_optimize(x, base_run$u, base_run$v, w, lambda, optimizer = optimizer, epsilon = epsilon, max_iter = max_iter, eta = eta, norm_comp = norm_comp, verbose = verbose, fast = fast, cores = cores)
   }
   
   

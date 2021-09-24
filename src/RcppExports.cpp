@@ -20,36 +20,38 @@ BEGIN_RCPP
 END_RCPP
 }
 // grad_v
-SEXP grad_v(const Eigen::Map<Eigen::MatrixXd> x, Eigen::Map<Eigen::MatrixXd> u, Eigen::Map<Eigen::MatrixXd> v, Eigen::Map<Eigen::MatrixXd> uv_exp, int n_cores);
-RcppExport SEXP _spatialr_dev_grad_v(SEXP xSEXP, SEXP uSEXP, SEXP vSEXP, SEXP uv_expSEXP, SEXP n_coresSEXP) {
+SEXP grad_v(const Eigen::Map<Eigen::MatrixXd> x, Eigen::Map<Eigen::MatrixXd> u, Eigen::Map<Eigen::MatrixXd> v, Eigen::Map<Eigen::MatrixXd> v_penal, Eigen::Map<Eigen::MatrixXd> uv_exp, int n_cores);
+RcppExport SEXP _spatialr_dev_grad_v(SEXP xSEXP, SEXP uSEXP, SEXP vSEXP, SEXP v_penalSEXP, SEXP uv_expSEXP, SEXP n_coresSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type x(xSEXP);
     Rcpp::traits::input_parameter< Eigen::Map<Eigen::MatrixXd> >::type u(uSEXP);
     Rcpp::traits::input_parameter< Eigen::Map<Eigen::MatrixXd> >::type v(vSEXP);
+    Rcpp::traits::input_parameter< Eigen::Map<Eigen::MatrixXd> >::type v_penal(v_penalSEXP);
     Rcpp::traits::input_parameter< Eigen::Map<Eigen::MatrixXd> >::type uv_exp(uv_expSEXP);
     Rcpp::traits::input_parameter< int >::type n_cores(n_coresSEXP);
-    rcpp_result_gen = Rcpp::wrap(grad_v(x, u, v, uv_exp, n_cores));
+    rcpp_result_gen = Rcpp::wrap(grad_v(x, u, v, v_penal, uv_exp, n_cores));
     return rcpp_result_gen;
 END_RCPP
 }
 // grad_u
-SEXP grad_u(const Eigen::Map<Eigen::MatrixXd> x, Eigen::Map<Eigen::MatrixXd> u, Eigen::Map<Eigen::MatrixXd> v, Eigen::Map<Eigen::MatrixXd> uv_exp, Eigen::Map<Eigen::MatrixXd> w, Eigen::Map<Eigen::MatrixXd> j2, Eigen::Map<Eigen::MatrixXd> one, double lambda, int n_cores);
-RcppExport SEXP _spatialr_dev_grad_u(SEXP xSEXP, SEXP uSEXP, SEXP vSEXP, SEXP uv_expSEXP, SEXP wSEXP, SEXP j2SEXP, SEXP oneSEXP, SEXP lambdaSEXP, SEXP n_coresSEXP) {
+SEXP grad_u(const Eigen::Map<Eigen::MatrixXd> x, Eigen::Map<Eigen::MatrixXd> u, Eigen::Map<Eigen::MatrixXd> v, Eigen::Map<Eigen::MatrixXd> u_penal, Eigen::Map<Eigen::MatrixXd> uv_exp, Eigen::Map<Eigen::MatrixXd> w, Eigen::Map<Eigen::MatrixXd> j2, Eigen::Map<Eigen::MatrixXd> one, double lambda, int n_cores);
+RcppExport SEXP _spatialr_dev_grad_u(SEXP xSEXP, SEXP uSEXP, SEXP vSEXP, SEXP u_penalSEXP, SEXP uv_expSEXP, SEXP wSEXP, SEXP j2SEXP, SEXP oneSEXP, SEXP lambdaSEXP, SEXP n_coresSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type x(xSEXP);
     Rcpp::traits::input_parameter< Eigen::Map<Eigen::MatrixXd> >::type u(uSEXP);
     Rcpp::traits::input_parameter< Eigen::Map<Eigen::MatrixXd> >::type v(vSEXP);
+    Rcpp::traits::input_parameter< Eigen::Map<Eigen::MatrixXd> >::type u_penal(u_penalSEXP);
     Rcpp::traits::input_parameter< Eigen::Map<Eigen::MatrixXd> >::type uv_exp(uv_expSEXP);
     Rcpp::traits::input_parameter< Eigen::Map<Eigen::MatrixXd> >::type w(wSEXP);
     Rcpp::traits::input_parameter< Eigen::Map<Eigen::MatrixXd> >::type j2(j2SEXP);
     Rcpp::traits::input_parameter< Eigen::Map<Eigen::MatrixXd> >::type one(oneSEXP);
     Rcpp::traits::input_parameter< double >::type lambda(lambdaSEXP);
     Rcpp::traits::input_parameter< int >::type n_cores(n_coresSEXP);
-    rcpp_result_gen = Rcpp::wrap(grad_u(x, u, v, uv_exp, w, j2, one, lambda, n_cores));
+    rcpp_result_gen = Rcpp::wrap(grad_u(x, u, v, u_penal, uv_exp, w, j2, one, lambda, n_cores));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -83,13 +85,42 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// reg_c
+SEXP reg_c(const Eigen::Map<Eigen::MatrixXd> comp, double eta, int n_cores);
+RcppExport SEXP _spatialr_dev_reg_c(SEXP compSEXP, SEXP etaSEXP, SEXP n_coresSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type comp(compSEXP);
+    Rcpp::traits::input_parameter< double >::type eta(etaSEXP);
+    Rcpp::traits::input_parameter< int >::type n_cores(n_coresSEXP);
+    rcpp_result_gen = Rcpp::wrap(reg_c(comp, eta, n_cores));
+    return rcpp_result_gen;
+END_RCPP
+}
+// norm_c
+SEXP norm_c(const Eigen::Map<Eigen::MatrixXd> comp, double eta, const Eigen::Map<Eigen::MatrixXd> ident, int n_cores);
+RcppExport SEXP _spatialr_dev_norm_c(SEXP compSEXP, SEXP etaSEXP, SEXP identSEXP, SEXP n_coresSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type comp(compSEXP);
+    Rcpp::traits::input_parameter< double >::type eta(etaSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd> >::type ident(identSEXP);
+    Rcpp::traits::input_parameter< int >::type n_cores(n_coresSEXP);
+    rcpp_result_gen = Rcpp::wrap(norm_c(comp, eta, ident, n_cores));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_spatialr_dev_exp_uv", (DL_FUNC) &_spatialr_dev_exp_uv, 3},
-    {"_spatialr_dev_grad_v", (DL_FUNC) &_spatialr_dev_grad_v, 5},
-    {"_spatialr_dev_grad_u", (DL_FUNC) &_spatialr_dev_grad_u, 9},
+    {"_spatialr_dev_grad_v", (DL_FUNC) &_spatialr_dev_grad_v, 6},
+    {"_spatialr_dev_grad_u", (DL_FUNC) &_spatialr_dev_grad_u, 10},
     {"_spatialr_dev_lik_c", (DL_FUNC) &_spatialr_dev_lik_c, 6},
     {"_spatialr_dev_penal_c", (DL_FUNC) &_spatialr_dev_penal_c, 4},
+    {"_spatialr_dev_reg_c", (DL_FUNC) &_spatialr_dev_reg_c, 3},
+    {"_spatialr_dev_norm_c", (DL_FUNC) &_spatialr_dev_norm_c, 4},
     {NULL, NULL, 0}
 };
 

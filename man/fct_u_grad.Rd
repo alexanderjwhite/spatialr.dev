@@ -4,7 +4,7 @@
 \alias{fct_u_grad}
 \title{Internal U Gradient Function}
 \usage{
-fct_u_grad(x, u, v, u_penal, eta, uv_exp, w, j2, one, lambda, cores)
+fct_u_grad(x, u, v, u_penal, uv_exp, w, j2, one, lambda, cores)
 }
 \arguments{
 \item{x}{matrix; data matrix}
@@ -13,9 +13,7 @@ fct_u_grad(x, u, v, u_penal, eta, uv_exp, w, j2, one, lambda, cores)
 
 \item{v}{matrix; v matrix}
 
-\item{u_penal}{TRUE or FALSE; penalize column normal of u}
-
-\item{eta}{numeric; column normal penalization coefficient}
+\item{u_penal}{numeric; penalization if u is normalized}
 
 \item{uv_exp}{matrix; stored matrix multiplication}
 

@@ -16,7 +16,8 @@ Imports:
     Rcpp,
     stats,
     RcppEigen,
-    Matrix
+    Matrix,
+    pushoverr
 LinkingTo: 
     RcppEigen,
     Rcpp

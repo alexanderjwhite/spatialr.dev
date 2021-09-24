@@ -5,12 +5,12 @@ exp_uv <- function(u, v, n_cores) {
     .Call(`_spatialr_dev_exp_uv`, u, v, n_cores)
 }
 
-grad_v <- function(x, u, v, uv_exp, n_cores) {
-    .Call(`_spatialr_dev_grad_v`, x, u, v, uv_exp, n_cores)
+grad_v <- function(x, u, v, v_penal, uv_exp, n_cores) {
+    .Call(`_spatialr_dev_grad_v`, x, u, v, v_penal, uv_exp, n_cores)
 }
 
-grad_u <- function(x, u, v, uv_exp, w, j2, one, lambda, n_cores) {
-    .Call(`_spatialr_dev_grad_u`, x, u, v, uv_exp, w, j2, one, lambda, n_cores)
+grad_u <- function(x, u, v, u_penal, uv_exp, w, j2, one, lambda, n_cores) {
+    .Call(`_spatialr_dev_grad_u`, x, u, v, u_penal, uv_exp, w, j2, one, lambda, n_cores)
 }
 
 lik_c <- function(x, u, v, uv_exp, j1, n_cores) {
@@ -19,5 +19,13 @@ lik_c <- function(x, u, v, uv_exp, j1, n_cores) {
 
 penal_c <- function(u, w, j2, n_cores) {
     .Call(`_spatialr_dev_penal_c`, u, w, j2, n_cores)
+}
+
+reg_c <- function(comp, eta, n_cores) {
+    .Call(`_spatialr_dev_reg_c`, comp, eta, n_cores)
+}
+
+norm_c <- function(comp, eta, ident, n_cores) {
+    .Call(`_spatialr_dev_norm_c`, comp, eta, ident, n_cores)
 }
 

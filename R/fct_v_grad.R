@@ -7,12 +7,6 @@
 #' @export
 #'
 #' @examples
-fct_v_grad <- function(x, u, v, v_penal, eta, uv_exp, cores){
-  
-  if(v_penal){
-    v_grad <- t(x-uv_exp)%*%u - eta*(4*v%*%t(v)%*%v - 4*v)
-  } else {
-    v_grad <- t(x-uv_exp)%*%u
-  }
-  return(v_grad)
+fct_v_grad <- function(x, u, v, v_penal, uv_exp, cores){
+    t(x-uv_exp)%*%u - v_penal
 }
