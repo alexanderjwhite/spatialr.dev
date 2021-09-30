@@ -34,14 +34,14 @@ spatial_clust <- function(x, u_init, v_init, coords, lambda = NULL, grid = 5, w 
   
   base_run <- fct_optimize(x, u_init, v_init, w, lambda = 0, optimizer = optimizer, epsilon = epsilon, max_iter = max_iter, eta = eta, norm_comp = "none", verbose = verbose, fast = fast, cores = cores)
   
+  r0 <- abs(base_run$r)
+  lo <- 0.01*r0
+  hi <- 1e4*r0
+  
   if(is.null(lambda)){
     if(verbose){print("No lambda specified, computing appropriate range...")}
     result <- NULL
-    
-    r0 <- abs(base_run$r)
-    lo <- 0.01*r0
-    hi <- 1e4*r0
-    
+
     if(verbose){print(paste("Done. r0 = ", round(r0, digits = 5)))}
     
     lambda_seq <- exp(seq(log(lo), log(hi), length.out = grid))
@@ -55,7 +55,7 @@ spatial_clust <- function(x, u_init, v_init, coords, lambda = NULL, grid = 5, w 
       result <- append(list(res),result)
     }
   } else {
-    result <- fct_optimize(x, base_run$u, base_run$v, w, lambda, optimizer = optimizer, epsilon = epsilon, max_iter = max_iter, eta = eta, norm_comp = norm_comp, verbose = verbose, fast = fast, cores = cores)
+    result <- fct_optimize(x, base_run$u, base_run$v, w, lambda, optimizer = optimizer, epsilon = epsilon, max_iter = max_iter, eta = eta, norm_comp = norm_comp, verbose = verbose, fast = fast, cores = cores, r = r0, lo = lo, hi = hi)
   }
   
   

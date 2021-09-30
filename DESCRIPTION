@@ -1,6 +1,6 @@
 Package: spatialr.dev
 Title: Research, Development and Testing of Spatial Clustering Project
-Version: 1.0.0.9000
+Version: 1.0.1
 Authors@R: 
     person(given = "Alex",
            family = "White",
