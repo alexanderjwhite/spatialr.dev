@@ -2,17 +2,17 @@ load("development/spatialLIBD.spe.RData")
 library(dplyr)
 library(ggplot2)
 #library(spatialr.dev)
-X=expr_counts[["counts"]][1:100,1:200]
+X <- expr_counts[["counts"]][1:100,1:200]
 X <- t(X)
 
-sp_svd = sparsesvd::sparsesvd(log(X+1),rank=20)
+sp_svd <- sparsesvd::sparsesvd(log(X+1),rank=20)
 
 U0 <- sp_svd$u
 V0 <- sp_svd$v %*% diag(sp_svd$d)
 
 W=fct_dist_matrix(coords[1:200,], distance = "euclidean", method = "knn_1", k = NULL,alpha = 1, verbose = TRUE)
 
-large_penal <- spatial_clust(x=as.matrix(X), u_init=U0, v_init=V0, max_iter = 2e3, norm_comp = "u", eta = 100, coords=NULL ,lambda = NULL, grid = 5, w=W, optimizer = fct_opt_amsgrad, fast = FALSE)
+large_penal <- spatial_clust(x=(X), u_init=U0, v_init=V0, max_iter = 2e3, norm_comp = "u", eta = 100, coords=NULL ,lambda = NULL, grid = 5, w=W, optimizer = fct_opt_amsgrad, fast = FALSE)
 
 
 diag(apply(V0, 2, function(y){norm(y, type="2")}))

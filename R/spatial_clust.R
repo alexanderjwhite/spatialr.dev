@@ -55,7 +55,8 @@ spatial_clust <- function(x, u_init, v_init, coords, lambda = NULL, grid = 5, w 
       result <- append(list(res),result)
     }
   } else {
-    result <- fct_optimize(x, base_run$u, base_run$v, w, lambda, optimizer = optimizer, epsilon = epsilon, max_iter = max_iter, eta = eta, norm_comp = norm_comp, verbose = verbose, fast = fast, cores = cores, r = r0, lo = lo, hi = hi)
+    result <- fct_optimize(x, base_run$u, base_run$v, w, lambda, optimizer = optimizer, epsilon = epsilon, max_iter = max_iter, eta = eta, norm_comp = norm_comp, verbose = verbose, fast = fast, cores = cores)
+    result <- list(result, r = r0, lo = lo, hi = hi)
   }
   
   

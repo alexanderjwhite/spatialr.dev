@@ -1,0 +1,16 @@
+#!/bin/bash
+
+#SBATCH -J spatial_results
+#SBATCH -o spatial_%j.txt
+#SBATCH -e spatial_%j.err
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=whitealj@iu.edu
+#SBATCH --nodes=4
+#SBATCH --ntasks-per-node=24
+#SBATCH --mem=248G
+#SBATCH --time=8:00:00
+
+module load r/4.0.4
+
+cd "/geode2/home/u100/whitealj/Carbonate/scripts/"
+R CMD BATCH "/geode2/home/u100/whitealj/Carbonate/scripts/20210924_spatialpreproc.R"
