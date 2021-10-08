@@ -103,7 +103,7 @@ fct_optimize <- function(x, u, v, w, lambda, optimizer, epsilon, max_iter, eta, 
     
     if(is.nan(diff)){diff <- Inf}
     if(verbose & ((iter %% 10) == 0)){print(paste0("Objective at iteration ", iter, ": ", round(objective, digits = 10), "|lik:", round(lik, digits = 2), "|penal:", round(penal, digits = 2)))}
-    if(verbose & ((iter %% 10) == 0)){fct_push_me(paste("lambda:",lambda,"|iter:", iter,"|diff:",round(diff, digits = 10)))}
+    
     if((diff < epsilon) | (iter >= max_iter)){converged <- TRUE}
 
   }
