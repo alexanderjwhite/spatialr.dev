@@ -25,8 +25,10 @@ fct_dist_matrix <- function(coords, distance = "euclidean", method = "dist", k =
     #adj_matrix <- (Matrix::sparseMatrix(i = rep(1:nrow(coords), each = k), j = neighbours, x = 1, dims = c(nrow(coords), nrow(coords))))
     if(method == "knn_1"){
       w <- Matrix::sparseMatrix(i = rep(1:nrow(coords), each = k), j = neighbours, x = 1, dims = c(nrow(coords), nrow(coords)))
+      w <- as(w, "dgCMatrix")
     } else if(method == "knn_2"){
       w <- Matrix::sparseMatrix(i = rep(1:nrow(coords), each = k), j = neighbours, x = as.vector(t(nn$nn.dist)), dims = c(nrow(coords), nrow(coords)))
+      w <- as(w, "dgCMatrix")
     }
   }
   if(verbose){print("Done")}

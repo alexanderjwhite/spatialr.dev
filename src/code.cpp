@@ -16,7 +16,7 @@ SEXP exp_uv(const Eigen::Map<Eigen::MatrixXd> u,
 }
 
 // [[Rcpp::export]]
-SEXP grad_v(const Eigen::Map<Eigen::MatrixXd> x,
+SEXP grad_v(const Eigen::SparseMatrix<double> x,
             Eigen::Map<Eigen::MatrixXd> u, 
             Eigen::Map<Eigen::MatrixXd> v,
             Eigen::Map<Eigen::MatrixXd> v_penal,
@@ -29,12 +29,12 @@ SEXP grad_v(const Eigen::Map<Eigen::MatrixXd> x,
 }
 
 // [[Rcpp::export]]
-SEXP grad_u(const Eigen::Map<Eigen::MatrixXd> x,
+SEXP grad_u(const Eigen::SparseMatrix<double> x,
             Eigen::Map<Eigen::MatrixXd> u, 
             Eigen::Map<Eigen::MatrixXd> v,
             Eigen::Map<Eigen::MatrixXd> u_penal,
             Eigen::Map<Eigen::MatrixXd> uv_exp,
-            Eigen::Map<Eigen::MatrixXd> w,
+            Eigen::SparseMatrix<double> w,
             Eigen::Map<Eigen::MatrixXd> j2,
             Eigen::Map<Eigen::MatrixXd> one,
             double lambda,
@@ -46,7 +46,7 @@ SEXP grad_u(const Eigen::Map<Eigen::MatrixXd> x,
 }
 
 // [[Rcpp::export]]
-SEXP lik_c(const Eigen::Map<Eigen::MatrixXd> x,
+SEXP lik_c(const Eigen::SparseMatrix<double> x,
                  Eigen::Map<Eigen::MatrixXd> u, 
                  Eigen::Map<Eigen::MatrixXd> v,
                  Eigen::Map<Eigen::MatrixXd> uv_exp,
@@ -59,9 +59,9 @@ SEXP lik_c(const Eigen::Map<Eigen::MatrixXd> x,
 }
 
 // [[Rcpp::export]]
-SEXP penal_c(const Eigen::Map<Eigen::MatrixXd> u, 
-                 Eigen::Map<Eigen::MatrixXd> w,
-                 Eigen::Map<Eigen::MatrixXd> j2,
+SEXP penal_c(const Eigen::Map<Eigen::MatrixXd> u,
+             Eigen::SparseMatrix<double> w,
+             Eigen::Map<Eigen::MatrixXd> j2,
                  int n_cores){
   
   Eigen::setNbThreads(n_cores);
