@@ -5,6 +5,7 @@
 *.RData
 *.rds
 *.html
+*.pdf
 # Development data
 
 # User-specific files
