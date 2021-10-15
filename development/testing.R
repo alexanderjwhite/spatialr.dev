@@ -34,7 +34,7 @@ NMF::aheatmap(large_penal$u, Colv = FALSE, Rowv = FALSE)
 
 
 
-test2 <- spatial_clust(x=as.matrix(X), u_init=U0, v_init=V0, max_iter = 100, norm_comp = "u", eta = 100, coords=NULL ,lambda = 1e3, w=W, optimizer = fct_opt_amsgrad, fast = FALSE)
+test2 <- spatial_clust(x=(X), u_init=U0, v_init=V0, max_iter = 100, norm_comp = "u", eta = 100, coords=NULL ,lambda = 1e3, w=W, optimizer = fct_opt_amsgrad, fast = FALSE)
 
 purrr::map_dfr(large_penal, .f = function(.x){
   tibble(lik = .x$lik, penal = .x$penal, lam = .x$lambda)

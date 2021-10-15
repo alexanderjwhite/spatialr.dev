@@ -39,7 +39,7 @@ fct_optimize(
 
 \item{eta}{numeric; column normal penalization coefficient}
 
-\item{norm_comp}{string; "u" to normalize u, "v" to normalize v, "none" to skip component normalization.}
+\item{norm_comp}{string; "u" to normalize u, "v" to normalize v, "uv" for both, "none" to skip component normalization.}
 
 \item{verbose}{TRUE or FALSE; print to screen?}
 

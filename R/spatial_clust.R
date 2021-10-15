@@ -14,11 +14,13 @@
 #' @param optimizer internal optimization function; options include: fct_opt_amsgrad, fct_opt_adadelt, fct_opt_adam, fct_opt_adamax, fct_opt_grad_desc, fct_opt_nadam, fct_opt_rmsprop.
 #' @param epsilon numeric; convergence criterion
 #' @param max_iter integer; maximum number of iterations
-#' @param norm_comp string; "u" to normalize u, "v" to normalize v, "none" to skip component normalization.
+#' @param norm_comp string; "u" to normalize u, "v" to normalize v, "uv" for both, "none" to skip component normalization.
 #' @param eta numeric; column normal penalization coefficient
 #' @param verbose TRUE or FALSE; print to screen?
 #' @param fast TRUE or FALSE; use compiled c?
 #' @param cores integer; number of cores to use
+#' 
+#' @import Matrix
 #'
 #' @return list including u, v and convergence information
 #' @export
@@ -31,6 +33,8 @@ spatial_clust <- function(x, u_init, v_init, coords, lambda = NULL, grid = 5, w 
   if(is.null(w)){
     w <- fct_dist_matrix(coords, distance = distance, method = method, k = k, alpha = alpha, verbose = verbose)
   }
+  
+  if(class(x)[1] != "dgCMatrix"){x <- as(x, "dgCMatrix")}
   
   base_run <- fct_optimize(x, u_init, v_init, w, lambda = 0, optimizer = optimizer, epsilon = epsilon, max_iter = max_iter, eta = eta, norm_comp = "none", verbose = verbose, fast = fast, cores = cores)
   

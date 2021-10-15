@@ -55,7 +55,7 @@ spatial_clust(
 
 \item{max_iter}{integer; maximum number of iterations}
 
-\item{norm_comp}{string; "u" to normalize u, "v" to normalize v, "none" to skip component normalization.}
+\item{norm_comp}{string; "u" to normalize u, "v" to normalize v, "uv" for both, "none" to skip component normalization.}
 
 \item{eta}{numeric; column normal penalization coefficient}
 
