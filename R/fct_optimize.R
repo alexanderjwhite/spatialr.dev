@@ -69,11 +69,7 @@ fct_optimize <- function(x, u, v, w, lambda, optimizer, epsilon, max_iter, eta, 
     } else if(norm_comp == "v"){
       v_penal <- f_reg(v, eta, cores)
       comp_normalize <- f_norm(v, eta, ident, cores)
-    } else if(norm_comp == "uv"){
-      u_penal <- f_reg(u, eta, cores)
-      v_penal <- f_reg(v, eta, cores)
-      comp_normalize <- f_norm(u, eta, ident, cores) + f_norm(v, eta, ident, cores)
-    }
+    } 
     
     u_gradient <- f_u_grad(x, u, v, u_penal, uv_exp, w, j2, one, lambda, cores)
     v_gradient <- f_v_grad(x, u, v, v_penal, uv_exp, cores)
