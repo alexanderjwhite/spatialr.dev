@@ -16,7 +16,7 @@ for(lam in lam_seq){
     }
   }
 }
-
+coords <- readRDS("development\\exp_2021_10_10\\spatial_coords_sub.rds")
 saveRDS(result,"development\\exp_2021_10_10\\result.rds")
 
 p1 <- 1:length(result) %>% 
@@ -80,7 +80,7 @@ lamb <- 1:length(result) %>%
   arrange(lam) %>% 
   pull(lam)
 
-pdf(file = "development/v_comp.pdf", width = 30, height = 30) 
+pdf(file = "development/none_bc.pdf", width = 30, height = 30) 
 par(mfrow = c(7,3))
 mem <- 1
 for(i in id1){
@@ -97,3 +97,49 @@ dev.off()
 dev.off()
 
 pdf(file = "development/v_comp.pdf", width = 30, height = 30) 
+
+pdf(file = "development/none_bc.pdf", width = 30, height = 30)
+par(mfrow = c(7,3))
+for(i in id1){
+  clust <- kmeans(result[[i]][[1]]$u, centers = 5)
+  data <- tibble(x = coords[,1], y = coords[,2], label = as.character(clust$cluster))
+  
+  p <- data %>% 
+    ggplot(aes(x = x, y = y, color = label)) +
+    geom_point()
+  print(p)
+}
+dev.off()
+
+
+p_list <- NULL
+for(i in id1){
+  clust <- kmeans(result[[i]][[1]]$u, centers = 5)
+  data <- tibble(x = coords[,1], y = coords[,2], label = as.character(clust$cluster))
+  
+  p <- data %>% 
+    ggplot(aes(x = x, y = y, color = label)) +
+    geom_point() +
+    theme(axis.title.x = element_blank(),
+          axis.title.y = element_blank(),
+          legend.position = "none")
+  
+  p_list <- c(p_list,list(p))
+  
+}
+pdf(file = "development/v_comp_bc.pdf", width = 30, height = 30)
+do.call("grid.arrange", c(p_list, ncol=3))
+dev.off()
+x <- readRDS("development/exp_2021_10_10/spatial_x_sub.rds")
+sp_svd <- sparsesvd::sparsesvd(log(x+1),rank=20)
+sp_pc <- irlba::irlba(x, nu=20)
+cluster_svd <- kmeans(sp_svd$u%*%diag(sp_svd$d)%*%t(sp_svd$v), centers=5)
+cluster_pc <- kmeans(sp_pc$u%*%diag(sp_pc$d)%*%t(sp_pc$v), centers=5)
+data <- tibble(x = coords[,1], y = coords[,2], label = as.character(cluster_svd$cluster))
+
+data %>% 
+  ggplot(aes(x = x, y = y, color = label)) +
+  geom_point() +
+  theme(axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        legend.position = "none")

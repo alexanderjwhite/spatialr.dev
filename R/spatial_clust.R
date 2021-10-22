@@ -14,6 +14,7 @@
 #' @param optimizer internal optimization function; options include: fct_opt_amsgrad, fct_opt_adadelt, fct_opt_adam, fct_opt_adamax, fct_opt_grad_desc, fct_opt_nadam, fct_opt_rmsprop.
 #' @param epsilon numeric; convergence criterion
 #' @param max_iter integer; maximum number of iterations
+#' @param init_iter integer; maximum number of initialization iterations
 #' @param norm_comp string; "u" to normalize u, "v" to normalize v, "uv" for both, "none" to skip component normalization.
 #' @param eta numeric; column normal penalization coefficient
 #' @param verbose TRUE or FALSE; print to screen?
@@ -26,7 +27,7 @@
 #' @export
 #'
 #' @examples 
-spatial_clust <- function(x, u_init, v_init, coords, lambda = NULL, grid = 5, w = NULL, distance = "euclidean", method = "dist", k = NULL, alpha = 1, optimizer = fct_opt_amsgrad, epsilon = 1e-8, max_iter = 1e3, norm_comp = "none", eta = 100, verbose = TRUE, fast = TRUE, cores = 1){
+spatial_clust <- function(x, u_init, v_init, coords, lambda = NULL, grid = 5, w = NULL, distance = "euclidean", method = "dist", k = NULL, alpha = 1, optimizer = fct_opt_amsgrad, epsilon = 1e-8, max_iter = 1e3, init_iter = 1e3, norm_comp = "none", eta = 100, verbose = TRUE, fast = TRUE, cores = 1){
   
   # ToDo: Check X matrix for appropriate conditions
   
@@ -36,7 +37,7 @@ spatial_clust <- function(x, u_init, v_init, coords, lambda = NULL, grid = 5, w 
   
   if(class(x)[1] != "dgCMatrix"){x <- as(x, "dgCMatrix")}
   
-  base_run <- fct_optimize(x, u_init, v_init, w, lambda = 0, optimizer = optimizer, epsilon = epsilon, max_iter = max_iter, eta = eta, norm_comp = "none", verbose = verbose, fast = fast, cores = cores)
+  base_run <- fct_optimize(x, u_init, v_init, w, lambda = 0, optimizer = optimizer, epsilon = epsilon, max_iter = init_iter, eta = eta, norm_comp = "none", verbose = verbose, fast = fast, cores = cores)
   
   r0 <- abs(base_run$r)
   lo <- 0.01*r0
