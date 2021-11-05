@@ -64,7 +64,7 @@ x <- rpois(length(param_mat), param_mat)
 dim(x) <- dim(param_mat)
 x <- as(x, "dgCMatrix")
 
-NMF::aheatmap(u, Colv = NA, Rowv = NA)
+NMF::aheatmap(u - min(u), Colv = NA, Rowv = NA)
 NMF::aheatmap(v, Colv = NA, Rowv = NA)
 NMF::aheatmap(signal, Colv = NA, Rowv = NA)
 NMF::aheatmap(uve, Colv = NA, Rowv = NA)
@@ -79,7 +79,7 @@ V0 <- sp_svd$v %*% diag(sp_svd$d)
 
 model <- spatial_clust(x=x, u_init=U0, v_init=V0, max_iter = 1e3, norm_comp = "u", eta = 100, coords=NULL ,lambda = 1e4, grid = 5, w=W, optimizer = fct_opt_amsgrad, fast = FALSE, 1)
 
-clust <- kmeans(param_mat, centers = 5)
+clust <- kmeans(u - min(u), centers = 5)
 clust_assign <- as.character(clust$cluster)
 # viz <- tibble(x = coords[,1], y = coords[,2], label = clust_assign)
 # viz %>% 
