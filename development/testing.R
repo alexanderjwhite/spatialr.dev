@@ -30,7 +30,7 @@ NMF::aheatmap(test2$u[which(W[1,]==1),], Colv = FALSE, Rowv = FALSE)
 NMF::aheatmap(U0[which(W[1,]==1),], Colv = FALSE, Rowv = FALSE)
 
 
-NMF::aheatmap(large_penal$u, Colv = FALSE, Rowv = FALSE)
+NMF::aheatmap(large_penal$u, Colv = NA, Rowv = NA)
 
 
 

@@ -15,7 +15,7 @@
 #' @param epsilon numeric; convergence criterion
 #' @param max_iter integer; maximum number of iterations
 #' @param init_iter integer; maximum number of initialization iterations
-#' @param norm_comp string; "u" to normalize u, "v" to normalize v, "uv" for both, "none" to skip component normalization.
+#' @param norm_comp string; "u" to normalize u, "u2" to normalize u with 2norm, "v" to normalize v, "v2" to normalize v with 2norm, "uv2" for both by 2norm, "none" to skip component normalization.
 #' @param eta numeric; column normal penalization coefficient
 #' @param verbose TRUE or FALSE; print to screen?
 #' @param fast TRUE or FALSE; use compiled c?

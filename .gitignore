@@ -6,6 +6,8 @@
 *.rds
 *.html
 *.pdf
+*.png
+*.Rmd
 # Development data
 
 # User-specific files
