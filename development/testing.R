@@ -21,7 +21,7 @@ V0 <- sp_svd$v %*% diag(sp_svd$d)
 
 W=fct_dist_matrix(coords[1:200,], distance = "euclidean", method = "knn_1", k = NULL,alpha = 1, verbose = TRUE)
 
-large_penal <- spatial_clust(x=as.matrix(X), u_init=U0, v_init=V0, max_iter = 5, norm_comp = "u", eta = 100, coords=NULL ,lambda = 0, grid = 5, w=W, optimizer = fct_opt_amsgrad, fast = TRUE, cores)
+large_penal <- spatial_clust(x=as.matrix(X), u_init=U0, v_init=V0, max_iter = 20, init_iter = 20, norm_comp = "uv2", eta = 100, coords=NULL ,lambda = 0, grid = 5, w=W, optimizer = fct_opt_amsgrad, fast = TRUE, cores)
 
 
 diag(apply(V0, 2, function(y){norm(y, type="2")}))
@@ -59,3 +59,11 @@ test4[[4]]$ which(W[1,]==1)
 
 
 NMF::aheatmap(test5$u[which(W[4,]==1),], Colv = FALSE, Rowv = FALSE)
+
+
+
+
+test <- matrix(rnorm(50), ncol = 10)
+ones <- matrix(rep(1,50), ncol = 5)
+
+sum(diag(test %*% ones))

@@ -1,94 +1,173 @@
-// [[Rcpp::depends(RcppEigen)]]
-// [[Rcpp::plugins(openmp)]]
+// [[Rcpp::plugins("cpp11")]]
+// [[Rcpp::depends(RcppArmadillo)]]
 
-#include <omp.h>
-#include <RcppEigen.h>
-
+#include <RcppArmadillo.h>
+using namespace Rcpp;
+using namespace arma;
 
 // [[Rcpp::export]]
-SEXP exp_uv(const Eigen::Map<Eigen::MatrixXd> u,
-            Eigen::Map<Eigen::MatrixXd> v, 
-            int n_cores){
+List fct_c_opt_adam(arma::mat gradients,
+                    List state){
+  if (state.size() == 0){
+    state["beta1"] = 0.9;
+    state["beta2"] = 0.999;
+    state["epsilon"] = 1e-8;
+    state["iteration"] = 1;
+    state["m"] = 0*gradients;
+    state["v"] = 0*gradients;
+    state["alpha"] = 1e-2;
+  }
   
-  Eigen::setNbThreads(n_cores);
-  Eigen::MatrixXd C = (u * v.transpose()).array().exp();
-  return Rcpp::wrap(C);
+  double beta1 = as<double>(state["beta1"]);
+  double beta2 = as<double>(state["beta2"]);
+  double epsilon = as<double>(state["epsilon"]);
+  int iteration = as<int>(state["iteration"]);
+  arma::mat m = as<arma::mat>(state["m"]);
+  arma::mat v = as<arma::mat>(state["v"]);
+  double alpha = as<double>(state["alpha"]);
+  
+  m = beta1 * m + (1.0 - beta1)*gradients;
+  v = beta2 * v + (1.0 - beta2)*(gradients % gradients);
+  arma::mat mhat = m / (1.0 - pow(beta1, iteration));
+  arma::mat vhat = v / (1.0 - pow(beta2, iteration));
+  state["updates"] = alpha * mhat / (sqrt(vhat) + epsilon);
+  
+  state["iteration"] = iteration + 1;
+  
+  state["m"] = m;
+  state["v"] = v;
+  
+  return(state);
 }
 
 // [[Rcpp::export]]
-SEXP grad_v(const Eigen::SparseMatrix<double> x,
-            Eigen::Map<Eigen::MatrixXd> u, 
-            Eigen::Map<Eigen::MatrixXd> v,
-            Eigen::Map<Eigen::MatrixXd> v_penal,
-            Eigen::Map<Eigen::MatrixXd> uv_exp,
-            int n_cores){
-  
-  Eigen::setNbThreads(n_cores);
-  Eigen::MatrixXd C = ((x - uv_exp).transpose()) * u - v_penal;
-  return Rcpp::wrap(C);
+double pdist(arma::mat x, arma::sp_mat w, arma::mat index){
+  double result = 0;
+  arma::mat diff;
+  index = index - 1;
+  for (int i = 0; i < index.n_rows; i++){
+    for (int j = 0; j < index.n_cols; j++){
+      diff = x.col(i) - x.col(index(i,j));
+      result = result + w(i,index(i,j)) * sqrt(accu(diff % diff));
+    }
+  }
+  return(result);
 }
 
 // [[Rcpp::export]]
-SEXP grad_u(const Eigen::SparseMatrix<double> x,
-            Eigen::Map<Eigen::MatrixXd> u, 
-            Eigen::Map<Eigen::MatrixXd> v,
-            Eigen::Map<Eigen::MatrixXd> u_penal,
-            Eigen::Map<Eigen::MatrixXd> uv_exp,
-            Eigen::SparseMatrix<double> w,
-            Eigen::Map<Eigen::MatrixXd> j2,
-            Eigen::Map<Eigen::MatrixXd> one,
-            double lambda,
-            int n_cores){
+List fct_c_optimize(arma::sp_mat x,
+                    arma::mat u,
+                    arma::mat v,
+                    arma::sp_mat w,
+                    arma::mat index,
+                    double lambda,
+                    double epsilon,
+                    int maxiter,
+                    bool display_progress=true){
   
-  Eigen::setNbThreads(n_cores);
-  Eigen::MatrixXd C = ((x - uv_exp) * v) - lambda*((2 * w.transpose() * j2.transpose()).cwiseProduct(u) + (2 * w.transpose() * j2.transpose()).cwiseProduct(u) - w.transpose() * u - w * u) - u_penal;
-  return Rcpp::wrap(C);
-}
-
-// [[Rcpp::export]]
-SEXP lik_c(const Eigen::SparseMatrix<double> x,
-                 Eigen::Map<Eigen::MatrixXd> u, 
-                 Eigen::Map<Eigen::MatrixXd> v,
-                 Eigen::Map<Eigen::MatrixXd> uv_exp,
-                 Eigen::Map<Eigen::MatrixXd> j1,
-                 int n_cores){
+  // Progress p(maxiter, display_progress);
+  bool converged = false;
+  double objective = -std::numeric_limits<double>::max();
+  double objective_prev;
+  double lik;
+  double diff;
+  double osp;
+  double u_diff;
+  double v_diff;
+  List results;
+  List u_state;
+  List v_state;
+  arma::mat u_prev;
+  arma::mat v_prev;
+  arma::mat uv_t;
+  arma::mat uv_exp;
+  arma::mat u_gradient;
+  arma::mat v_gradient;
+  arma::mat lik_store(maxiter, 1, fill::zeros);
+  arma::mat obj_store(maxiter, 1, fill::zeros);
+  arma::mat udiff_store(maxiter, 1, fill::zeros);
+  arma::mat vdiff_store(maxiter, 1, fill::zeros);
+  arma::mat osp_store(maxiter, 1, fill::zeros);
+  List u_grad_desc;
+  List v_grad_desc;
+  arma::mat u_update;
+  arma::mat v_update;
+  arma::mat j;
+  j.ones(u.n_cols, x.n_cols);
+  int i = 1;
   
-  Eigen::setNbThreads(n_cores);
-  double L = ((x.transpose() * u * v.transpose()).diagonal()).sum() - ((uv_exp * j1).diagonal()).sum() ;
-  return Rcpp::wrap(L);
-}
-
-// [[Rcpp::export]]
-SEXP penal_c(const Eigen::Map<Eigen::MatrixXd> u,
-             Eigen::SparseMatrix<double> w,
-             Eigen::Map<Eigen::MatrixXd> j2,
-                 int n_cores){
+  uv_t = u * v.t();
+  uv_exp = exp(uv_t);
   
-  Eigen::setNbThreads(n_cores);
-  double P = (w.transpose() * ((u.cwiseProduct(u)) * j2 + j2.transpose() * (u.transpose().cwiseProduct(u.transpose())) - 2 * u * u.transpose())).diagonal().sum();
-  return Rcpp::wrap(P);
-}
-
-// [[Rcpp::export]]
-SEXP reg_c(const Eigen::Map<Eigen::MatrixXd> comp, 
-           double eta,
-             int n_cores){
+  while (!converged) {
+    
+    
+    
+    u_prev = u;
+    v_prev = v;
+    objective_prev = objective;
+    
+    
+    
+    
+    if (i % 1 == 0){
+      Rcpp::checkUserInterrupt();
+    }
+    
+    u_gradient = (x - uv_exp) * v;
+    v_gradient = ((x - uv_exp).t() * u)  - lambda*((2 * (w + w.t()) * j.t()) % v - (w + w.t()) * v);
+    
+    
+    u_grad_desc = fct_c_opt_adam(u_gradient, u_state);
+    v_grad_desc = fct_c_opt_adam(v_gradient, v_state);
+    
+    u_state = u_grad_desc;
+    v_state = v_grad_desc;
+    
+    u_update = as<arma::mat>(u_grad_desc["updates"]);
+    v_update = as<arma::mat>(v_grad_desc["updates"]);
+    
+    u = u_prev + u_update;
+    v = v_prev + v_update;
+    
+    uv_t = u * v.t();
+    uv_exp = exp(uv_t);
+    
+    lik = accu(uv_t % x) - accu(uv_exp) ;
+    
+    osp = lambda*pdist(v.t(), w, index);
+    objective = lik-osp;
+    diff = abs(objective - objective_prev)/abs(objective_prev);
+    u_diff = accu(abs(u_prev - u))/accu(abs(u_prev));
+    v_diff = accu(abs(v_prev - v))/accu(abs(v_prev));
+    
+    lik_store[i] = lik;
+    osp_store[i] = osp;
+    obj_store[i] = objective;
+    udiff_store[i] = u_diff;
+    vdiff_store[i] = v_diff;
+    
+    if (i % 1 == 0){
+      Rcout << "I: " << i << " | " << u_diff << " | " << v_diff << " | " << objective  << " | " << osp  << " | " << lik  << " | " << diff << "\n";
+    }
+    
+    if((i >= maxiter) || ((diff < epsilon) && (u_diff < epsilon) && (v_diff < epsilon))){
+      converged = true;
+    }
+    
+    i = i + 1;
+    
+  }
+  results["u"] = u;
+  results["v"] = v;
+  results["lik_penal"] = objective;
+  results["likelihood"] = lik_store;
+  results["osp"] = osp_store;
+  results["objective"] = obj_store;
+  results["udiff"] = udiff_store;
+  results["vdiff"] = vdiff_store;
+  return(results);
   
-  Eigen::setNbThreads(n_cores);
-  Eigen::MatrixXd R = eta*(4*comp*comp.transpose()*comp - 4*comp);
-  return Rcpp::wrap(R);
-}
-
-// [[Rcpp::export]]
-SEXP norm_c(const Eigen::Map<Eigen::MatrixXd> comp, 
-           double eta,
-           const Eigen::Map<Eigen::MatrixXd> ident, 
-           int n_cores){
-  
-  Eigen::setNbThreads(n_cores);
-  Eigen::MatrixXd CTC = comp.transpose() * comp - ident;
-  double N = eta*((CTC.transpose() * CTC).diagonal().sum());
-  return Rcpp::wrap(N);
 }
 
 

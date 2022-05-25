@@ -5,71 +5,38 @@
 \title{Main Spatial Clustering Method}
 \usage{
 spatial_clust(
-  x,
+  input,
   u_init,
   v_init,
-  coords,
-  lambda = NULL,
-  grid = 5,
   w = NULL,
-  distance = "euclidean",
-  method = "dist",
-  k = NULL,
-  alpha = 1,
-  optimizer = fct_opt_amsgrad,
-  epsilon = 1e-08,
-  max_iter = 1000,
-  init_iter = 1000,
-  norm_comp = "none",
-  eta = 100,
-  verbose = TRUE,
-  fast = TRUE,
-  cores = 1
+  index = NULL,
+  lambda = 1,
+  k = 20,
+  epsilon = 0.001,
+  maxiter = 1000
 )
 }
 \arguments{
-\item{x}{matrix; data matrix}
+\item{input}{SingleCellExperiment object containing counts assay and row/col coordinates.}
 
 \item{u_init}{matrix; u initialization matrix}
 
 \item{v_init}{matrix; v initialization matrix}
 
-\item{coords}{matrix or data frame; euclidean coordinates in separate columns}
+\item{w}{matrix; distance matrix. If null, computed to specification with k nearest neighbors.}
+
+\item{index}{w index.}
 
 \item{lambda}{numeric; penalization parameter. set to NULL for lambda selection.}
 
-\item{grid}{integer; lamabda search space size. used only if lambda = NULL.}
-
-\item{w}{matrix; distance matrix. If null, computed on the fly.}
-
-\item{distance}{the distance measure to be used. This must be one of "euclidean", "maximum", "manhattan", "canberra", "binary" or "minkowski". Any unambiguous substring can be given.}
-
-\item{method}{string; "dist" by default uses \eqn{w_{ij} = \exp(-\alpha \times distance_{ij})} in the w computation. Other options include "knn_1" which uses k nearest neighbors and uses neighbors as 1 and non-neighbors as 0. "knn_2" uses \eqn{w_{ij} = \exp(-\alpha \times distance_{ij})} for neighbors and 0 for non-neighbors.}
-
 \item{k}{integer; if knn = TRUE, number of nearest neighbors to consider}
-
-\item{alpha}{numeric; parameter to adjust distance calculation}
-
-\item{optimizer}{internal optimization function; options include: fct_opt_amsgrad, fct_opt_adadelt, fct_opt_adam, fct_opt_adamax, fct_opt_grad_desc, fct_opt_nadam, fct_opt_rmsprop.}
 
 \item{epsilon}{numeric; convergence criterion}
 
-\item{max_iter}{integer; maximum number of iterations}
-
-\item{init_iter}{integer; maximum number of initialization iterations}
-
-\item{norm_comp}{string; "u" to normalize u, "u2" to normalize u with 2norm, "v" to normalize v, "v2" to normalize v with 2norm, "uv2" for both by 2norm, "none" to skip component normalization.}
-
-\item{eta}{numeric; column normal penalization coefficient}
-
-\item{verbose}{TRUE or FALSE; print to screen?}
-
-\item{fast}{TRUE or FALSE; use compiled c?}
-
-\item{cores}{integer; number of cores to use}
+\item{maxiter}{integer; maximum number of iterations}
 }
 \value{
-list including u, v and convergence information
+Object containing u, v and convergence information
 }
 \description{
 Main Spatial Clustering Method
