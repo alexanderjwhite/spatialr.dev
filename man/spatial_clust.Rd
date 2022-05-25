@@ -9,6 +9,7 @@ spatial_clust(
   u_init,
   v_init,
   w = NULL,
+  index = NULL,
   lambda = 1,
   k = 20,
   epsilon = 0.001,
@@ -23,6 +24,8 @@ spatial_clust(
 \item{v_init}{matrix; v initialization matrix}
 
 \item{w}{matrix; distance matrix. If null, computed to specification with k nearest neighbors.}
+
+\item{index}{w index.}
 
 \item{lambda}{numeric; penalization parameter. set to NULL for lambda selection.}
 

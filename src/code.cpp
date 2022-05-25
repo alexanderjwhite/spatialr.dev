@@ -15,7 +15,7 @@ List fct_c_opt_adam(arma::mat gradients,
     state["iteration"] = 1;
     state["m"] = 0*gradients;
     state["v"] = 0*gradients;
-    state["alpha"] = 1e-3;
+    state["alpha"] = 1e-2;
   }
   
   double beta1 = as<double>(state["beta1"]);
@@ -34,6 +34,9 @@ List fct_c_opt_adam(arma::mat gradients,
   
   state["iteration"] = iteration + 1;
   
+  state["m"] = m;
+  state["v"] = v;
+  
   return(state);
 }
 
@@ -45,7 +48,7 @@ double pdist(arma::mat x, arma::sp_mat w, arma::mat index){
   for (int i = 0; i < index.n_rows; i++){
     for (int j = 0; j < index.n_cols; j++){
       diff = x.col(i) - x.col(index(i,j));
-      result = result + w(i,index(i,j)) * accu(diff % diff);
+      result = result + w(i,index(i,j)) * sqrt(accu(diff % diff));
     }
   }
   return(result);
@@ -93,6 +96,9 @@ List fct_c_optimize(arma::sp_mat x,
   j.ones(u.n_cols, x.n_cols);
   int i = 1;
   
+  uv_t = u * v.t();
+  uv_exp = exp(uv_t);
+  
   while (!converged) {
     
     
@@ -100,8 +106,7 @@ List fct_c_optimize(arma::sp_mat x,
     u_prev = u;
     v_prev = v;
     objective_prev = objective;
-    uv_t = u * v.t();
-    uv_exp = exp(uv_t);
+    
     
     
     
@@ -125,6 +130,9 @@ List fct_c_optimize(arma::sp_mat x,
     u = u_prev + u_update;
     v = v_prev + v_update;
     
+    uv_t = u * v.t();
+    uv_exp = exp(uv_t);
+    
     lik = accu(uv_t % x) - accu(uv_exp) ;
     
     osp = lambda*pdist(v.t(), w, index);
@@ -140,7 +148,7 @@ List fct_c_optimize(arma::sp_mat x,
     vdiff_store[i] = v_diff;
     
     if (i % 1 == 0){
-      Rcout << "Iteration: " << i << " | Objective: " << diff << "\n";
+      Rcout << "I: " << i << " | " << u_diff << " | " << v_diff << " | " << objective  << " | " << osp  << " | " << lik  << " | " << diff << "\n";
     }
     
     if((i >= maxiter) || ((diff < epsilon) && (u_diff < epsilon) && (v_diff < epsilon))){
@@ -152,6 +160,7 @@ List fct_c_optimize(arma::sp_mat x,
   }
   results["u"] = u;
   results["v"] = v;
+  results["lik_penal"] = objective;
   results["likelihood"] = lik_store;
   results["osp"] = osp_store;
   results["objective"] = obj_store;
