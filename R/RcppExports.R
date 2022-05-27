@@ -13,3 +13,7 @@ fct_c_optimize <- function(x, u, v, w, index, lambda, epsilon, maxiter, display_
     .Call(`_spatialr_dev_fct_c_optimize`, x, u, v, w, index, lambda, epsilon, maxiter, display_progress)
 }
 
+obs_log_like <- function(test_x, u, v, test_nn, index_map) {
+    .Call(`_spatialr_dev_obs_log_like`, test_x, u, v, test_nn, index_map)
+}
+

@@ -170,5 +170,35 @@ List fct_c_optimize(arma::sp_mat x,
   
 }
 
+// [[Rcpp::export]]
+double obs_log_like(arma::sp_mat test_x,
+                    arma::mat u,
+                    arma::mat v,
+                    arma::mat test_nn,
+                    arma::mat index_map){
+  double cv_log_like = 0;
+  double cv_log_like_i;
+  double param_index;
+  arma::uvec uv_index_loc;
+  int uv_index;
+  arma::mat uv_t;
+  arma::mat uv_exp;
+  test_nn = test_nn - 1;
+  index_map = index_map - 1;
+  uv_t = u * v.t();
+  uv_exp = exp(uv_t);
+  
+  for (int i = 0; i < test_nn.n_rows; i++){
+    for (int j = 0; j < test_nn.n_cols; j++){
+      param_index = test_nn(i,j);
+      uv_index_loc = find(index_map == param_index);
+      uv_index = uv_index_loc(0,0);
+      cv_log_like_i = accu((test_x.col(i) % uv_t.col(uv_index)) - uv_exp.col(uv_index));
+      cv_log_like = cv_log_like + cv_log_like_i;
+    }
+    
+  }
+  return(cv_log_like);
+}
 
 

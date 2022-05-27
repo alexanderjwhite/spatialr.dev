@@ -55,11 +55,27 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// obs_log_like
+double obs_log_like(arma::sp_mat test_x, arma::mat u, arma::mat v, arma::mat test_nn, arma::mat index_map);
+RcppExport SEXP _spatialr_dev_obs_log_like(SEXP test_xSEXP, SEXP uSEXP, SEXP vSEXP, SEXP test_nnSEXP, SEXP index_mapSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::sp_mat >::type test_x(test_xSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type u(uSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type v(vSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type test_nn(test_nnSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type index_map(index_mapSEXP);
+    rcpp_result_gen = Rcpp::wrap(obs_log_like(test_x, u, v, test_nn, index_map));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_spatialr_dev_fct_c_opt_adam", (DL_FUNC) &_spatialr_dev_fct_c_opt_adam, 2},
     {"_spatialr_dev_pdist", (DL_FUNC) &_spatialr_dev_pdist, 3},
     {"_spatialr_dev_fct_c_optimize", (DL_FUNC) &_spatialr_dev_fct_c_optimize, 9},
+    {"_spatialr_dev_obs_log_like", (DL_FUNC) &_spatialr_dev_obs_log_like, 5},
     {NULL, NULL, 0}
 };
 
