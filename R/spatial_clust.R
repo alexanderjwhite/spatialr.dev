@@ -34,6 +34,6 @@ spatial_clust <- function(input, u_init, v_init, w = NULL, index = NULL, lambda 
     w <- methods::as(w, "dgCMatrix")
   }
   
-  fct_c_optimize(x = input, u = u_init, v = v_init, w = w, index = index, lambda = lambda, cnorm = cnorm, epsilon = epsilon, maxiter = maxiter, display_progress = TRUE)
+  fct_c_optimize(x = input, u = u_init, v = v_init, w = w, index = index, lambda = lambda, cnorm = cnorm, epsilon = epsilon, maxiter = maxiter)
 
 }
