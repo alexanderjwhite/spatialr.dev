@@ -11,6 +11,7 @@ spatial_clust(
   w = NULL,
   index = NULL,
   lambda = 1,
+  cnorm = NULL,
   k = 20,
   epsilon = 0.001,
   maxiter = 1000
@@ -28,6 +29,8 @@ spatial_clust(
 \item{index}{w index.}
 
 \item{lambda}{numeric; penalization parameter. set to NULL for lambda selection.}
+
+\item{cnorm}{a numeric value for the amount of V normalization. NULL for no normalization.}
 
 \item{k}{integer; if knn = TRUE, number of nearest neighbors to consider}
 

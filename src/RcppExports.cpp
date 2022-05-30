@@ -11,6 +11,17 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// vecnorm
+arma::mat vecnorm(arma::mat x);
+RcppExport SEXP _spatialr_dev_vecnorm(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(vecnorm(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // fct_c_opt_adam
 List fct_c_opt_adam(arma::mat gradients, List state);
 RcppExport SEXP _spatialr_dev_fct_c_opt_adam(SEXP gradientsSEXP, SEXP stateSEXP) {
@@ -37,8 +48,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // fct_c_optimize
-List fct_c_optimize(arma::sp_mat x, arma::mat u, arma::mat v, arma::sp_mat w, arma::mat index, double lambda, double epsilon, int maxiter, bool display_progress);
-RcppExport SEXP _spatialr_dev_fct_c_optimize(SEXP xSEXP, SEXP uSEXP, SEXP vSEXP, SEXP wSEXP, SEXP indexSEXP, SEXP lambdaSEXP, SEXP epsilonSEXP, SEXP maxiterSEXP, SEXP display_progressSEXP) {
+List fct_c_optimize(arma::sp_mat x, arma::mat u, arma::mat v, arma::sp_mat w, arma::mat index, double lambda, Nullable<double> cnorm, double epsilon, int maxiter);
+RcppExport SEXP _spatialr_dev_fct_c_optimize(SEXP xSEXP, SEXP uSEXP, SEXP vSEXP, SEXP wSEXP, SEXP indexSEXP, SEXP lambdaSEXP, SEXP cnormSEXP, SEXP epsilonSEXP, SEXP maxiterSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -48,10 +59,10 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::sp_mat >::type w(wSEXP);
     Rcpp::traits::input_parameter< arma::mat >::type index(indexSEXP);
     Rcpp::traits::input_parameter< double >::type lambda(lambdaSEXP);
+    Rcpp::traits::input_parameter< Nullable<double> >::type cnorm(cnormSEXP);
     Rcpp::traits::input_parameter< double >::type epsilon(epsilonSEXP);
     Rcpp::traits::input_parameter< int >::type maxiter(maxiterSEXP);
-    Rcpp::traits::input_parameter< bool >::type display_progress(display_progressSEXP);
-    rcpp_result_gen = Rcpp::wrap(fct_c_optimize(x, u, v, w, index, lambda, epsilon, maxiter, display_progress));
+    rcpp_result_gen = Rcpp::wrap(fct_c_optimize(x, u, v, w, index, lambda, cnorm, epsilon, maxiter));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -72,6 +83,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_spatialr_dev_vecnorm", (DL_FUNC) &_spatialr_dev_vecnorm, 1},
     {"_spatialr_dev_fct_c_opt_adam", (DL_FUNC) &_spatialr_dev_fct_c_opt_adam, 2},
     {"_spatialr_dev_pdist", (DL_FUNC) &_spatialr_dev_pdist, 3},
     {"_spatialr_dev_fct_c_optimize", (DL_FUNC) &_spatialr_dev_fct_c_optimize, 9},

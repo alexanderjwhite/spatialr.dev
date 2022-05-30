@@ -6,6 +6,7 @@
 #' @param w matrix; distance matrix. If null, computed to specification with k nearest neighbors. 
 #' @param index w index.
 #' @param lambda numeric; penalization parameter. set to NULL for lambda selection.
+#' @param cnorm a numeric value for the amount of V normalization. NULL for no normalization.
 #' @param k integer; if knn = TRUE, number of nearest neighbors to consider
 #' @param epsilon numeric; convergence criterion
 #' @param maxiter integer; maximum number of iterations
@@ -20,7 +21,7 @@
 #' @export
 #'
 #' @examples 
-spatial_clust <- function(input, u_init, v_init, w = NULL, index = NULL, lambda = 1, k = 20, epsilon = 1e-3, maxiter = 1e3){
+spatial_clust <- function(input, u_init, v_init, w = NULL, index = NULL, lambda = 1, cnorm = NULL, k = 20, epsilon = 1e-3, maxiter = 1e3){
   
   # x <- SummarizedExperiment::assay(input)
   
@@ -33,6 +34,6 @@ spatial_clust <- function(input, u_init, v_init, w = NULL, index = NULL, lambda 
     w <- methods::as(w, "dgCMatrix")
   }
   
-  fct_c_optimize(x = input, u = u_init, v = v_init, w = w, index = index, lambda = lambda, epsilon = epsilon, maxiter = maxiter, display_progress = TRUE)
+  fct_c_optimize(x = input, u = u_init, v = v_init, w = w, index = index, lambda = lambda, cnorm = cnorm, epsilon = epsilon, maxiter = maxiter, display_progress = TRUE)
 
 }

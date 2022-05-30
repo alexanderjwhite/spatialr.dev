@@ -6,6 +6,16 @@ using namespace Rcpp;
 using namespace arma;
 
 // [[Rcpp::export]]
+arma::mat vecnorm(arma::mat x){
+  arma::mat norm_x = zeros<arma::mat>(x.n_cols,x.n_cols);
+  for (int i = 0; i < x.n_cols; i++){
+    norm_x(i,i) = norm(x.col(i), 2);
+  }
+  return(norm_x);
+}
+
+
+// [[Rcpp::export]]
 List fct_c_opt_adam(arma::mat gradients,
                     List state){
   if (state.size() == 0){
@@ -61,11 +71,10 @@ List fct_c_optimize(arma::sp_mat x,
                     arma::sp_mat w,
                     arma::mat index,
                     double lambda,
+                    Nullable<double> cnorm,
                     double epsilon,
-                    int maxiter,
-                    bool display_progress=true){
+                    int maxiter){
   
-  // Progress p(maxiter, display_progress);
   bool converged = false;
   double objective = -std::numeric_limits<double>::max();
   double objective_prev;
@@ -74,6 +83,7 @@ List fct_c_optimize(arma::sp_mat x,
   double osp;
   double u_diff;
   double v_diff;
+  double scale_norm;
   List results;
   List u_state;
   List v_state;
@@ -93,6 +103,7 @@ List fct_c_optimize(arma::sp_mat x,
   arma::mat u_update;
   arma::mat v_update;
   arma::mat j;
+  arma::mat vnorm;
   j.ones(u.n_cols, x.n_cols);
   int i = 1;
   
@@ -129,6 +140,13 @@ List fct_c_optimize(arma::sp_mat x,
     
     u = u_prev + u_update;
     v = v_prev + v_update;
+    
+    if(cnorm != R_NilValue){
+      scale_norm = as<double>(cnorm);
+      vnorm = vecnorm(v);
+      v = normalise(v)*scale_norm;
+      u = u * (vnorm/scale_norm);
+    }
     
     uv_t = u * v.t();
     uv_exp = exp(uv_t);
