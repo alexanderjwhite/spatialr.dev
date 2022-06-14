@@ -67,7 +67,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // obs_log_like
-double obs_log_like(arma::sp_mat test_x, arma::mat u, arma::mat v, arma::mat test_nn, arma::mat index_map);
+arma::rowvec obs_log_like(arma::sp_mat test_x, arma::mat u, arma::mat v, arma::mat test_nn, arma::mat index_map);
 RcppExport SEXP _spatialr_dev_obs_log_like(SEXP test_xSEXP, SEXP uSEXP, SEXP vSEXP, SEXP test_nnSEXP, SEXP index_mapSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
