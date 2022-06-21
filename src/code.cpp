@@ -6,26 +6,41 @@ using namespace Rcpp;
 using namespace arma;
 
 // [[Rcpp::export]]
-arma::mat vecnorm(arma::mat x,
-                  bool importance=false,
-                  bool inverse=false){
-  arma::mat norm_x = zeros<arma::mat>(x.n_cols,x.n_cols);
-  double total = 0;
+arma::rowvec vecnorm_row(arma::mat x){
+  arma::rowvec norm_x(x.n_cols,fill::zeros);
   for (int i = 0; i < x.n_cols; i++){
-    norm_x(i,i) = norm(x.col(i), 2);
-    total = total + norm_x(i,i);
-  }
-  if(importance){
-    for (int i = 0; i < x.n_cols; i++){
-      if(inverse){
-        norm_x(i,i) = total;
-      } else {
-        norm_x(i,i) = 1/total;
-      }
-      
-    }
+    norm_x(i) = norm(x.col(i), 2);
   }
   return(norm_x);
+}
+
+// [[Rcpp::export]]
+arma::mat vecnorm_diag(arma::mat x){
+  arma::mat norm_x = zeros<arma::mat>(x.n_cols,x.n_cols);
+  for (int i = 0; i < x.n_cols; i++){
+    norm_x(i,i) = norm(x.col(i), 2);
+  }
+  return(norm_x);
+}
+
+// [[Rcpp::export]]
+List uv_norm(arma::mat u,
+             arma::mat v){
+  
+  List result;
+  
+  arma::mat unorm = normalise(u);
+  arma::mat vnorm = normalise(v);
+  arma::rowvec unorm_vec = vecnorm_row(u);
+  arma::rowvec vnorm_vec = vecnorm_row(v);
+  
+  for (int i = 0; i < u.n_cols; i++){
+    u.col(i) = unorm.col(i) * sqrt(unorm_vec(i)*vnorm_vec(i));
+    v.col(i) = vnorm.col(i) * sqrt(unorm_vec(i)*vnorm_vec(i));
+  }
+  result["u"] = u;
+  result["v"] = v;
+  return(result);
 }
 
 
@@ -114,6 +129,7 @@ List fct_c_optimize(arma::sp_mat x,
   arma::mat osp_store(maxiter, 1, fill::zeros);
   List u_grad_desc;
   List v_grad_desc;
+  List norms;
   arma::mat u_update;
   arma::mat v_update;
   arma::mat j;
@@ -157,12 +173,13 @@ List fct_c_optimize(arma::sp_mat x,
     
     if(cnorm != R_NilValue){
       scale_norm = as<double>(cnorm);
-      vnorm = vecnorm(v);
+      vnorm = vecnorm_diag(v);
       v = normalise(v)*scale_norm;
       u = u * (vnorm/scale_norm);
     } else {
-      u = u * vecnorm(v, true, true);
-      v = v * vecnorm(v, true);
+      norms = uv_norm(u, v);
+      u = as<arma::mat>(norms["u"]);
+      v = as<arma::mat>(norms["v"]);
     }
     
     uv_t = u * v.t();

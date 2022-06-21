@@ -11,16 +11,37 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// vecnorm
-arma::mat vecnorm(arma::mat x, bool importance, bool inverse);
-RcppExport SEXP _spatialr_dev_vecnorm(SEXP xSEXP, SEXP importanceSEXP, SEXP inverseSEXP) {
+// vecnorm_row
+arma::rowvec vecnorm_row(arma::mat x);
+RcppExport SEXP _spatialr_dev_vecnorm_row(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::mat >::type x(xSEXP);
-    Rcpp::traits::input_parameter< bool >::type importance(importanceSEXP);
-    Rcpp::traits::input_parameter< bool >::type inverse(inverseSEXP);
-    rcpp_result_gen = Rcpp::wrap(vecnorm(x, importance, inverse));
+    rcpp_result_gen = Rcpp::wrap(vecnorm_row(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// vecnorm_diag
+arma::mat vecnorm_diag(arma::mat x);
+RcppExport SEXP _spatialr_dev_vecnorm_diag(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(vecnorm_diag(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// uv_norm
+List uv_norm(arma::mat u, arma::mat v);
+RcppExport SEXP _spatialr_dev_uv_norm(SEXP uSEXP, SEXP vSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type u(uSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type v(vSEXP);
+    rcpp_result_gen = Rcpp::wrap(uv_norm(u, v));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -85,7 +106,9 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_spatialr_dev_vecnorm", (DL_FUNC) &_spatialr_dev_vecnorm, 3},
+    {"_spatialr_dev_vecnorm_row", (DL_FUNC) &_spatialr_dev_vecnorm_row, 1},
+    {"_spatialr_dev_vecnorm_diag", (DL_FUNC) &_spatialr_dev_vecnorm_diag, 1},
+    {"_spatialr_dev_uv_norm", (DL_FUNC) &_spatialr_dev_uv_norm, 2},
     {"_spatialr_dev_fct_c_opt_adam", (DL_FUNC) &_spatialr_dev_fct_c_opt_adam, 2},
     {"_spatialr_dev_pdist", (DL_FUNC) &_spatialr_dev_pdist, 3},
     {"_spatialr_dev_fct_c_optimize", (DL_FUNC) &_spatialr_dev_fct_c_optimize, 9},
