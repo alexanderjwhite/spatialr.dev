@@ -127,7 +127,7 @@ for(i in id1){
   p_list <- c(p_list,list(p))
   
 }
-pdf(file = "development/v_comp_bc.pdf", width = 30, height = 30)
+pdf(file = "development/v_comp_bc.pdf", width = 10, height = 10)
 do.call("grid.arrange", c(p_list, ncol=3))
 dev.off()
 x <- readRDS("development/exp_2021_10_10/spatial_x_sub.rds")

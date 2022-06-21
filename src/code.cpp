@@ -6,10 +6,24 @@ using namespace Rcpp;
 using namespace arma;
 
 // [[Rcpp::export]]
-arma::mat vecnorm(arma::mat x){
+arma::mat vecnorm(arma::mat x,
+                  bool importance=false,
+                  bool inverse=false){
   arma::mat norm_x = zeros<arma::mat>(x.n_cols,x.n_cols);
+  double total = 0;
   for (int i = 0; i < x.n_cols; i++){
     norm_x(i,i) = norm(x.col(i), 2);
+    total = total + norm_x(i,i);
+  }
+  if(importance){
+    for (int i = 0; i < x.n_cols; i++){
+      if(inverse){
+        norm_x(i,i) = total;
+      } else {
+        norm_x(i,i) = 1/total;
+      }
+      
+    }
   }
   return(norm_x);
 }
@@ -146,6 +160,9 @@ List fct_c_optimize(arma::sp_mat x,
       vnorm = vecnorm(v);
       v = normalise(v)*scale_norm;
       u = u * (vnorm/scale_norm);
+    } else {
+      u = u * vecnorm(v, true, true);
+      v = v * vecnorm(v, true);
     }
     
     uv_t = u * v.t();
