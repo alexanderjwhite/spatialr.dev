@@ -7,8 +7,8 @@ library(ggplot2)
 library(ggpubr)
 library(gridExtra)
 
-input <- "151676"
-folder <- "cv_2022_06_18_11"
+input <- "151507"
+folder <- "cv_2022_06_21_04"
 folder_path <- paste0("G:/My Drive/Dissertation/Spatial/spatial_analysis/",folder,"/output/")
 file <- list.files(folder_path)
 file <- file[stringr::str_detect(file, ".rds")]
